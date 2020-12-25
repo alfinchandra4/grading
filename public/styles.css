@@ -1,0 +1,8 @@
+.jumbotron {
+    /* background: url("img/gdupn.jpg") no-repeat center center fixed;
+    background-size: cover; */
+      background-image: linear-gradient(rgba(46, 124, 30, 0.5), rgba(23, 209, 54, 0.5)), url("img/gdupn.jpg");
+      background-size: cover;
+      color: #fff;
+      min-height: 800px;
+}
