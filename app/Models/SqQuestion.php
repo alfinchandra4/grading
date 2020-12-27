@@ -11,4 +11,8 @@ class SqQuestion extends Model
 
     protected $table = 'sq_questions';
     protected $guarded = [];
+
+    public function sq_category() {
+        return $this->belongsTo(SqCategory::class, 'id');
+    }
 }

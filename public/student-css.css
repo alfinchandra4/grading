@@ -1,0 +1,57 @@
+.bundle_chart {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.bundle_chart li {
+    display: inline;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.bundle_chart li a {
+    text-decoration: none;
+}
+
+.each_chart {
+  background-color: #e6e6e6;
+  width: 100%;
+}
+
+.each_chart_visual {
+
+}
+
+.users_chart {
+    width: 100%;
+    background-color: #433d3c;
+    color: white;
+    padding: 25px;
+}
+
+.user_chart {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.user_chart li {
+    display: inline;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.user_chart li a {
+    color: white;
+    text-decoration: none;
+}
+
+.forms {
+    background-color: #2FA03A;
+    min-height: 900px;
+}

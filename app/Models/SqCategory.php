@@ -11,4 +11,8 @@ class SqCategory extends Model
 
     protected $table = 'sq_categories';
     protected $guarded = [];
+
+    public function sq_question () {
+        return $this->hasMany(SqQuestion::class, 'sq_category_id', 'id');
+    }
 }

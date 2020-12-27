@@ -1,8 +1,52 @@
 .jumbotron {
-    /* background: url("img/gdupn.jpg") no-repeat center center fixed;
-    background-size: cover; */
-      background-image: linear-gradient(rgba(46, 124, 30, 0.5), rgba(23, 209, 54, 0.5)), url("img/gdupn.jpg");
-      background-size: cover;
-      color: #fff;
-      min-height: 800px;
+/* background: url("img/gdupn.jpg") no-repeat center center fixed;
+background-size: cover; */
+  background-image: linear-gradient(rgba(46, 124, 30, 0.5), rgba(23, 209, 54, 0.5)), url("img/gdupn.jpg");
+  background-size: cover;
+  color: #fff;
+  min-height: 800px;
+}
+
+
+.profile_ {
+  background-color: #ffd31d;
+  width: 100%;
+  padding: 15px;
+}
+
+.content {
+  min-height: 500px;
+}
+
+.monitor {
+  background-color: #e6e6e6;
+  padding: 25px 0px 25px 0px;
+}
+
+.card-monitor {
+  height: 130px;
+}
+
+.total_student {
+  background-image: linear-gradient(to right, #475ED5, #9BA7E8);
+}
+.total_lecturer {
+  background-image: linear-gradient(to right, #8CF78A, #26D462);
+}
+.total_alumni {
+  background-image: linear-gradient(to right, #D59447, #E8D79B);
+}
+.total_responses {
+  background-image: linear-gradient(to right, #D54747, #EF9581);
+}
+
+.card-total {
+  color: white;
+  font-size:15pt
+}
+
+.card-value {
+  color: white;
+  font-size: 25pt;
+  font-weight: bold;
 }
