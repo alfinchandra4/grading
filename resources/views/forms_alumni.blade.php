@@ -1,6 +1,6 @@
-@extends('student.layouts.app')
+@extends('layouts.app')
 
-@section('pagetitle', 'Student Dashboard')
+@section('pagetitle', 'Form Kuisioner')
 
 @section('content')
     <div class="container p-3 forms">
@@ -22,16 +22,15 @@
                 dengan keterangan sebagai berikut: <br />
                 1 = Sangat Tidak Setuju <br />
                 2 = Tidak Setuju </br>
-                3 = Cukup Setuju </br>
-                4 = Setuju </br>
-                5 = Sangat Setuju <br />
+                3 = Setuju </br>
+                4 = Sangat Setuju <br />
             </div>
         </div>
         <div class="card question offset-1 col-10 mt-5">
             <div class="card-body">
                 <div class="question-category fw-bold h5">{{ session('category')['category'] }}</div>
                 <div class="question-answer">
-                    <form action="{{ route('student.form.store') }}" method="post" id="fillFrm">
+                    <form action="{{ route('alumni.form.store') }}" method="post" id="fillFrm">
                         @csrf
                         <input type="hidden" name="category_id" value="{{ session('category')['id'] }}">
                         @foreach (session('questions') as $key => $q)
@@ -62,11 +61,6 @@
                                         <label class="form-check-label" for="{{ $key }}4">4</label>
                                     </div>
 
-                                    <div class="form-check form-check-inline" style="margin: 0 50px 0 0px">
-                                        <input class="form-check-input" type="radio" name="ans[{{ $key }}]" id="{{ $key }}5"
-                                            value="5" required {{ isset($answer) && $answer[$key] == 5 ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="{{ $key }}5">5</label>
-                                    </div>
                                 </span>
                             </div>
                         @endforeach
@@ -75,7 +69,7 @@
             </div>
             <div class="card-footer d-grid gap-2 d-md-flex justify-content-md-end">
                 @if (session('disablebtn') != true)
-                    <a href="{{ route('student.forms', session('backurl')) }}" class="btn btn-outline-success">Back</a>
+                    <a href="{{ route('alumni.forms', session('backurl')) }}" class="btn btn-outline-success">Back</a>
                 @endif
                 <button type="submit" class="btn btn-success mr-auto" form="fillFrm">Next</button>
             </div>

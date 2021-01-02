@@ -50,3 +50,14 @@ background-size: cover; */
   font-size: 25pt;
   font-weight: bold;
 }
+
+.avatar {
+    vertical-align: middle;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.msg {
+  
+}

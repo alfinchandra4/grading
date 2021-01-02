@@ -13,11 +13,11 @@ class AuthController extends Controller
 
     public function attempt(Request $request) {
         if (Auth::guard('student')->attempt(['nim' => $request->identity, 'password' => $request->password ])) {
-            return redirect('/student');
+            return redirect('/dashboard');
         } elseif (Auth::guard('lecturer')->attempt(['nidn' => $request->identity, 'password' => $request->password ])) {
-            return redirect('/lecturer');
+            return redirect('/dashboard');
         } elseif(Auth::guard('alumni')->attempt(['nim' => $request->identity, 'password' => $request->password ])) {
-            return redirect('/alumni');
+            return redirect('/dashboard');
         }
     }
 

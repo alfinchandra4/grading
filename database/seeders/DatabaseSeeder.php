@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alumni;
+use App\Models\AqQuestion;
+use App\Models\Lecturer;
 use App\Models\Student;
 use Database\Factories\StudentFactory;
 use Illuminate\Database\Seeder;
@@ -16,11 +19,18 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        Student::factory(300)->create();
+        Student::factory(100)->create();
+        Lecturer::factory(100)->create();
+        Alumni::factory(100)->create();
 
         $this->call([
             SqCategorySeeder::class,
             SqQuestionSeeder::class,
+            LqCategorySeeder::class,
+            LqQuestionSeeder::class,
+            AqCategorySeeder::class,
+            AqQuestionSeeeder::class,
+            SqAnswerTableSeeder::class
         ]);
     }
 }

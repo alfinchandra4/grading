@@ -17,8 +17,13 @@ class CreateLecturersTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('nidn');
-            $table->string('major')->nullable();
-            $table->string('expertise')->nullable();
+            $table->string('password');
+            $table->char('gender'); // 1; pria , 2;wanita
+            $table->string('faculty'); // ilmu komputer
+            $table->string('birth');
+            $table->date('dob'); // date of birth
+            $table->char('phone');
+            $table->char('email');
             $table->timestamps();
         });
     }

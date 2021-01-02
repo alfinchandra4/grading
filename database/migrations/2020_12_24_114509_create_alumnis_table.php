@@ -17,6 +17,7 @@ class CreateAlumnisTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('nim');
+            $table->string('password');
             $table->string('faculty'); // ilmu komputer
             $table->char('major');
             $table->integer('generation');

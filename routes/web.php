@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Student\StudentController;
-use App\Http\Controllers\Student\StatsController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AcademicsCotroller;
+use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\LecturerController;
+use App\Models\Alumni;
 use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
@@ -26,20 +29,45 @@ Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->nam
 Route::post('/login', [AuthController::class, 'attempt']);
 Route::get('/logout/{guard}', [AuthController::class, 'logout']);
 
-Route::group(['prefix' => 'student', 'middleware' => 'auth:student'], function () {
+Route::group(['middleware' => 'auth:student,lecturer,alumni'], function () {
 
-    Route::get('/', [StudentController::class, 'index'])->name('student.index');
+    Route::get('/dashboard', [AcademicsCotroller::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'actor'], function () {
-        Route::get('{role}', [StudentController::class, 'actortype'])->name('student.actortype');
-        Route::get('{role}/summary', [StudentController::class, 'summary'])->name('student.actor.visual.summary');
-        Route::get('{role}/line',    [StudentController::class, 'line'])->name('student.actor.visual.line');
-        Route::get('{role}/bar',     [StudentController::class, 'bar'])->name('student.actor.visual.bar');
-        Route::get('{role}/detail',  [StudentController::class, 'detail'])->name('student.actor.visual.detail');
+        Route::get('{role}', [AcademicsCotroller::class, 'actortype'])->name('actortype');
+        Route::get('{role}/summary', [AcademicsCotroller::class, 'summary'])->name('visual.summary');
+        Route::get('{role}/line',    [AcademicsCotroller::class, 'line'])->name('visual.line');
+        Route::get('{role}/bar',     [AcademicsCotroller::class, 'bar'])->name('visual.bar');
+        Route::get('{role}/detail',  [AcademicsCotroller::class, 'detail'])->name('visual.detail');
     });
 
-    Route::get('/forms/{category_id}', [StudentController::class, 'forms'])->name('student.forms');
-    Route::post('/forms', [StudentController::class, 'formstore'])->name('student.form.store');
+    Route::group(['prefix' => 'student'], function () {
+        Route::get('/forms/{category_id}', [StudentController::class, 'forms'])->name('student.forms');
+        Route::post('/forms', [StudentController::class, 'formstore'])->name('student.form.store');        
+
+        Route::get('/profile', [StudentController::class, 'profile'])->name('student.profile');
+        Route::put('/profile', [StudentController::class, 'profilestore'])->name('student.profile.store');
+    });
+
+    Route::group(['prefix' => 'lecturer'], function () {
+        Route::get('/forms/{category_id}', [LecturerController::class, 'forms'])->name('lecturer.forms');
+        Route::post('/forms', [LecturerController::class, 'formstore'])->name('lecturer.form.store');        
+
+        Route::get('/profile', [LecturerController::class, 'profile'])->name('lecturer.profile');
+        Route::put('/profile', [LecturerController::class, 'profilestore'])->name('lecturer.profile.store');
+    });
+
+    Route::group(['prefix' => 'alumni'], function () {
+        Route::get('/forms/{category_id}', [AlumniController::class, 'forms'])->name('alumni.forms');
+        Route::post('/forms', [AlumniController::class, 'formstore'])->name('alumni.form.store');        
+
+        Route::get('/profile', [AlumniController::class, 'profile'])->name('alumni.profile');
+        Route::put('/profile', [AlumniController::class, 'profilestore'])->name('alumni.profile.store');
+    });
+
+
+
+
     Route::get('/checkforms', [StudentController::class, 'checkforms']);
     Route::get('/clearforms', [StudentController::class, 'clearforms']);
 
