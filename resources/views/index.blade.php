@@ -123,11 +123,13 @@
                 <a href="{{ route(session('routes')[1], session('actor')) }}"
                     style="{{ session('visual') == 2 ? 'border-bottom: 2px solid black' : '' }}">Statistik</a>
             </li>
+            @if (session('actor') != 2)
             <!-- 3 -->
             <li>
                 <a href="{{ route(session('routes')[2], session('actor')) }}"
                     style="{{ session('visual') == 3 ? 'border-bottom: 2px solid black' : '' }}">Perbandingan</a>
             </li>
+            @endif
             <!-- 4 -->
             <li>
                 <a href="{{ route(session('routes')[3], session('actor')) }}"
@@ -185,7 +187,7 @@
                     labels: {!! $years !!}, // years
                     datasets: [{
                         label: "{{ $person }}",
-                        data: {!! $total_persons !!}, //student numbers
+                        data: {!! $total !!}, //student numbers
                         borderColor: 'blue',
                         fill: false
                     }]

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AqAnswer;
 use App\Models\LqAnswer;
 use App\Models\SqAnswer;
 use App\Models\Student;
@@ -74,7 +75,16 @@ class AcademicsCotroller extends Controller
                 break;
             
             case 3:
-                $text = 'Role 3 Define';
+                    $agree = AqAnswer::whereIn('answer', [1, 2])->count();
+                    $disagree = AqAnswer::whereIn('answer', [3, 4])->count();
+                    if ($agree != 0 && $disagree != 0) {
+                        $percentage = [
+                            'agree' => ($agree / ($agree + $disagree)) * 100,
+                            'disagree' => ($disagree / ($agree + $disagree)) * 100,
+                        ];
+                    } else {
+                        $defaultPercentage = true;
+                    }
                 break;
 
         }
@@ -98,40 +108,66 @@ class AcademicsCotroller extends Controller
     public function line ($role) {
         session()->put('visual', 2);
 
+        $array = []; 
+        $year  = [];
+        $count = [];
         switch ($role) {
             case 1:
-                $student_ids = SqAnswer::groupBy('student_id')->select('student_id')->get()->toArray();
-                $generations = Student::whereIn('id', $student_ids)->select('generation', DB::raw("count('id') as total_student"))->groupBy('generation')->get();
-                    $years = [];
-                    $total_students = [];
-                foreach ($generations as $key => $value) {
-                    $years [] = (int) $value['generation'];
-                    $total_students [] = (int) $value['total_student'];
-                }
                 $person = 'Mahasiswa';
-
-                // dd($years, $students);
-                
+                $datas = DB::table('sq_answers as sns')->selectRaw('YEAR(sns.created_at) as year, sns.student_id')->distinct()->get()->toArray();
+                foreach ($datas as $value) {
+                    array_key_exists($value->year, $array) ? 
+                        $array[$value->year] += 1 :                         
+                        $array[$value->year] = 1;
+                }
+                foreach ($array as $key => $value) {
+                    $year [] = $key; $count [] = $value;
+                }
                 return view('index', [
-                    'years' => json_encode($years),
-                    'total_persons' => json_encode($total_students),
+                    'years' => json_encode($year),
+                    'total' => json_encode($count),
                     'person' => $person,
                 ]);
-
                 break;
             
             case 2:
-                $lecturer_ids = LqAnswer::groupBy('lecturer_id')->select('lecturer_id')->get()->toArray();
-                // $generation
+                $person = 'Dosen';
+                $datas = DB::table('lq_answers as lns')->selectRaw('YEAR(lns.created_at) as year, lns.lecturer_id')->distinct()->get()->toArray();
+                foreach ($datas as $value) {
+                    array_key_exists($value->year, $array) ? 
+                        $array[$value->year] += 1 :                         
+                        $array[$value->year] = 1;
+                }
+                foreach ($array as $key => $value) {
+                    $year [] = $key; $count [] = $value;
+                }
+                return view('index', [
+                    'years' => json_encode($year),
+                    'total' => json_encode($count),
+                    'person' => $person,
+                ]);
                 break;
 
             case 3:
-                $text = 'Role 3 statistik';
+                $person = 'Alumni';
+                $datas = DB::table('aq_answers as ans')->selectRaw('YEAR(ans.created_at) as year, ans.alumni_id')->distinct()->get()->toArray();
+                foreach ($datas as $value) {
+                    array_key_exists($value->year, $array) ? 
+                        $array[$value->year] += 1 :                         
+                        $array[$value->year] = 1;
+                }
+                foreach ($array as $key => $value) {
+                    $year [] = $key; $count [] = $value;
+                }
+                return view('index', [
+                    'years' => json_encode(array_reverse($year)),
+                    'total' => json_encode(array_reverse($count)),
+                    'person' => $person,
+                ]);
                 break;
+                
         }
-        return view('index', [
-            'text' => $text
-        ]);
+
     }
 
     // Perbandingan
