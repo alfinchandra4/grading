@@ -74,11 +74,14 @@
                             <span class="card-total">Total Responden</span>
                             <div class="card-value">
                                 @php
-                                $students = DB::table('sq_answers')->select(DB::raw('count(student_id) as
+                                $students_count = DB::table('sq_answers')->select(DB::raw('count(student_id) as
                                 student'))->groupBy('student_id')->get()->count();
-                                $lecturers = DB::table('lq_answers')->select(DB::raw('count(lecturer_id) as
+                                $lecturers_count = DB::table('lq_answers')->select(DB::raw('count(lecturer_id) as
                                 lecturer'))->groupBy('lecturer_id')->get()->count();
+                                $alumnus_count = DB::table('aq_answers')->select(DB::raw('count(alumni_id) as
+                                alumni'))->groupBy('alumni_id')->get()->count();
                                 @endphp
+                                {{ $students_count + $lecturers_count + $alumnus_count }}
                             </div>
                         </div>
                     </div>
@@ -124,11 +127,11 @@
                     style="{{ session('visual') == 2 ? 'border-bottom: 2px solid black' : '' }}">Statistik</a>
             </li>
             @if (session('actor') != 2)
-            <!-- 3 -->
-            <li>
-                <a href="{{ route(session('routes')[2], session('actor')) }}"
-                    style="{{ session('visual') == 3 ? 'border-bottom: 2px solid black' : '' }}">Perbandingan</a>
-            </li>
+                <!-- 3 -->
+                <li>
+                    <a href="{{ route(session('routes')[2], session('actor')) }}"
+                        style="{{ session('visual') == 3 ? 'border-bottom: 2px solid black' : '' }}">Perbandingan</a>
+                </li>
             @endif
             <!-- 4 -->
             <li>
@@ -184,18 +187,18 @@
             var myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: {!! $years !!}, // years
+                    labels: {!!$years!!}, // years
                     datasets: [{
                         label: "{{ $person }}",
-                        data: {!! $total !!}, //student numbers
+                        data: {!!$total!!}, //student numbers
                         borderColor: 'blue',
                         fill: false
                     }]
                 },
                 options: {
-                title: {
-                    display: true,
-                    text: 'World population per region (in millions)'
+                    title: {
+                        display: true,
+                        text: 'World population per region (in millions)'
                     }
                 }
             });
@@ -204,51 +207,52 @@
     @endsection
 @endif
 
-@if (session('visual') == 3) 
+@if (session('visual') == 3)
     @section('js-bottom')
         <script>
             console.log("{{ $data }}");
-        var ctx = document.getElementById("myChart").getContext('2d');
-		var myChart = new Chart(ctx, {
-			type: 'bar',
-			data: {
-				labels: ["SI", "TI", "MI"],
-				datasets: [{
-					// label: '# of Votes',
-					data: {!! $data !!},
-					backgroundColor: [
-					'#f37121',
-					'#ff7b54',
-					'#db6400',
-					],
-					borderWidth: 1
-				}]
-			},
-			options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero:true
-						}
-					}]
-				},
-                legend: {
-                    display: false
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["SI", "TI", "MI"],
+                    datasets: [{
+                        // label: '# of Votes',
+                        data: {!!$data!!},
+                        backgroundColor: [
+                            '#f37121',
+                            '#ff7b54',
+                            '#db6400',
+                        ],
+                        borderWidth: 1
+                    }]
                 },
-                tooltips: {
-                    callbacks: {
-                    label: function(tooltipItem) {
-                            return tooltipItem.yLabel;
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
                         }
                     }
                 }
-			}
-		});
+            });
+
         </script>
     @endsection
 @endif
 
-@if (session('visual') == 4) 
+@if (session('visual') == 4)
     @section('js-bottom')
         <script>
             var ctx = document.getElementById('myChart').getContext('2d');
@@ -279,29 +283,30 @@
                 ],
                 borderWidth: 2,
                 hoverBorderWidth: 0
-                };
-                
-                var chartOptions = {
+            };
+
+            var chartOptions = {
                 scales: {
                     yAxes: [{
-                    barPercentage: 0.5
+                        barPercentage: 0.5
                     }]
                 },
                 elements: {
                     rectangle: {
-                    borderSkipped: 'left',
+                        borderSkipped: 'left',
                     }
                 }
-                };
-                
-                var barChart = new Chart(ctx, {
+            };
+
+            var barChart = new Chart(ctx, {
                 type: 'horizontalBar',
                 data: {
                     labels: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
                     datasets: [densityData],
                 },
                 options: chartOptions
-                });
+            });
+
         </script>
     @endsection
 @endif

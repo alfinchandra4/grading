@@ -65,10 +65,19 @@ Route::group(['middleware' => 'auth:student,lecturer,alumni'], function () {
         Route::put('/profile', [AlumniController::class, 'profilestore'])->name('alumni.profile.store');
     });
 
-
-
-
     Route::get('/checkforms', [StudentController::class, 'checkforms']);
     Route::get('/clearforms', [StudentController::class, 'clearforms']);
 
+});
+
+route::get('mhs', function() {
+    return view('example.student');
+});
+
+Route::get('alumni', function () {
+    return view('example.alumni');
+});
+
+Route::get('dosen', function () {
+    return view('example.lecturer');
 });
