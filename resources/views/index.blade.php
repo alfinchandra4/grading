@@ -18,16 +18,7 @@
                     {{ auth('alumni')->user()->name }} - {{ auth('alumni')->user()->nim }}
                 @endauth
                 <div class="float-end">
-                    <a href="#" class="btn btn-outline-success btn-sm">Report</a>
-                    @auth('student')
-                        <a href="{{ route('student.forms', 1) }}" class="btn btn-success btn-sm">Isi kuesioner</a>
-                    @endauth
-                    @auth('lecturer')
-                        <a href="{{ route('lecturer.forms', 1) }}" class="btn btn-success btn-sm">Isi kuesioner</a>
-                    @endauth
-                    @auth('alumni')
-                        <a href="{{ route('alumni.forms', 1) }}" class="btn btn-success btn-sm">Isi kuesioner</a>
-                    @endauth
+                    Periode Pengisian 2021 / 2022
                 </div>
             </span>
         </div>
@@ -37,6 +28,34 @@
 @section('monitor')
     <div class="monitor">
         <div class="container">
+            <div class="row mb-4">
+                <div class="col">
+                    <a href="
+                        @auth('student')
+                            {{ route('student.forms', 1) }}
+                        @endauth
+                        @auth('lecturer')
+                            {{ route('lecturer.forms', 1) }}
+                        @endauth
+                        @auth('alumni')
+                            {{ route('alumni.forms', 1) }}
+                        @endauth
+                        " style="text-decoration: none">
+                        <div class="card card-monitor card-kuesioner border-0">
+                            <div class="card-body" style="color:white;">
+                                <span class="fw-bold h1">Isi Kuesioner!</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <div class="card card-monitor card-complaint border-0">
+                        <div class="card-body" style="color:white;">
+                            <span class="fw-bold h1">Report Complaint!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <div class="card card-monitor total_student border-0">
@@ -147,6 +166,12 @@
         <div class="card">
             <div class="card-body">
                 <canvas id="myChart"></canvas>
+                @if (session('visual') == 1)
+                <span id="caption">
+                    <div class="">Puas: {!! $percentage['agree'] !!} %</div>
+                    <div class="">Tidak puas: {!! $percentage['disagree'] !!} %</div>
+                </span>
+                @endif
             </div>
         </div>
     </div>
@@ -164,7 +189,8 @@
                             "Tidak Puas",
                         ],
                         datasets: [{
-                            data: [{!!$percentage['agree'] !!}, {!!$percentage['disagree'] !!}],
+                            data: [{!!$percentage['agree'] !!},
+                             {!!$percentage['disagree'] !!}],
                             backgroundColor: [
                                 "#f37121",
                                 "#d9534f",
@@ -210,15 +236,15 @@
 @if (session('visual') == 3)
     @section('js-bottom')
         <script>
-            console.log("{{ $data }}");
+            console.log({{ $data }});
             var ctx = document.getElementById("myChart").getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ["SI", "TI", "MI"],
+                    labels: ["S1 SI", "S1 TI", "D3 SI"],
                     datasets: [{
                         // label: '# of Votes',
-                        data: {!!$data!!},
+                        data: {!! $data !!},
                         backgroundColor: [
                             '#f37121',
                             '#ff7b54',
@@ -257,54 +283,26 @@
         <script>
             var ctx = document.getElementById('myChart').getContext('2d');
             var densityData = {
-                label: 'Density of Planets (kg/m3)',
-                data: [5427, 5243, 5514, 3933, 1326, 687, 1271, 1638],
-                backgroundColor: [
-                    'rgba(0, 99, 132, 0.6)',
-                    'rgba(30, 99, 132, 0.6)',
-                    'rgba(60, 99, 132, 0.6)',
-                    'rgba(90, 99, 132, 0.6)',
-                    'rgba(120, 99, 132, 0.6)',
-                    'rgba(150, 99, 132, 0.6)',
-                    'rgba(180, 99, 132, 0.6)',
-                    'rgba(210, 99, 132, 0.6)',
-                    'rgba(240, 99, 132, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(0, 99, 132, 1)',
-                    'rgba(30, 99, 132, 1)',
-                    'rgba(60, 99, 132, 1)',
-                    'rgba(90, 99, 132, 1)',
-                    'rgba(120, 99, 132, 1)',
-                    'rgba(150, 99, 132, 1)',
-                    'rgba(180, 99, 132, 1)',
-                    'rgba(210, 99, 132, 1)',
-                    'rgba(240, 99, 132, 1)'
-                ],
-                borderWidth: 2,
-                hoverBorderWidth: 0
-            };
-
-            var chartOptions = {
-                scales: {
-                    yAxes: [{
-                        barPercentage: 0.5
-                    }]
-                },
-                elements: {
-                    rectangle: {
-                        borderSkipped: 'left',
-                    }
-                }
+                label: 'Detail kategor',
+                data: {!! $max !!},
+                backgroundColor: {!! $color !!},
             };
 
             var barChart = new Chart(ctx, {
                 type: 'horizontalBar',
                 data: {
-                    labels: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
+                    labels: {!! $labels !!},
                     datasets: [densityData],
                 },
-                options: chartOptions
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
             });
 
         </script>

@@ -27,6 +27,16 @@ background-size: cover; */
   height: 130px;
 }
 
+.card-kuesioner {
+  line-height: 130px;
+  background-image: linear-gradient(to right, #D347D5, #E271BC);
+}
+
+.card-complaint {
+    line-height: 130px;
+    background-image: linear-gradient(to right, #21BFB6, #9BE8E8);
+}
+
 .total_student {
   background-image: linear-gradient(to right, #475ED5, #9BA7E8);
 }

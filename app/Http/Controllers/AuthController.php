@@ -12,6 +12,10 @@ class AuthController extends Controller
     }
 
     public function attempt(Request $request) {
+
+        session()->forget('questions');
+        session()->forget('forms');
+
         if (Auth::guard('student')->attempt(['nim' => $request->identity, 'password' => $request->password ])) {
             return redirect('/dashboard');
         } elseif (Auth::guard('lecturer')->attempt(['nidn' => $request->identity, 'password' => $request->password ])) {
