@@ -81,7 +81,7 @@
                                 <a class="nav-link" href="/logout/alumni">Log out</a>
                             @endauth
                             @auth('dean')
-                                <a class="nav-link" href="/logout/alumni">Log out</a>
+                                <a class="nav-link" href="/logout/dean">Log out</a>
                             @endauth
                             @auth('administrator')
                                 <a class="nav-link" href="/logout/administrator">Log out</a>
