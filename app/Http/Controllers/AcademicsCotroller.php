@@ -354,25 +354,21 @@ class AcademicsCotroller extends Controller
             case 3:
                 $studentsWhoAnswers = AqAnswer::select('alumni_id')->groupBy('alumni_id')->get()->toArray();
                 $studentLength = count($studentsWhoAnswers);
-                $categories = ['Akademik dan Kemahasiswaan', 'Keuangan', 'Administrasi Umum', 'Program Studi', 'Labolatorium'];
+                $categories = ['Umum', 'Mutu dan Kompetensi Lulusan', 'Kebutuhan Stakeholder Kota'];
                 $cat1= 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0;
 
                 foreach ($studentsWhoAnswers as $key => $std) {
-                    $cat1 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 1)->sum('answer') / 4;
-                    $cat2 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 2)->sum('answer') / 2;
-                    $cat3 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 3)->sum('answer') / 2;
-                    $cat4 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 4)->sum('answer') / 7;
-                    $cat5 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 5)->sum('answer') / 6;
+                    $cat1 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 1)->sum('answer') / 9;
+                    $cat2 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 2)->sum('answer') / 4;
+                    $cat3 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 3)->sum('answer') / 5;
                 }
                 
                     $cat1 == 0 ? $cat1 = 0 : $cat1 /= $studentLength;
                     $cat2 == 0 ? $cat2 = 0 : $cat2 /= $studentLength;
                     $cat3 == 0 ? $cat3 = 0 : $cat3 /= $studentLength;
-                    $cat4 == 0 ? $cat4 = 0 : $cat4 /= $studentLength;
-                    $cat5 == 0 ? $cat5 = 0 : $cat5 /= $studentLength;
                     
-                $max   = [(int) $cat1, (int) $cat2, (int) $cat3, (int) $cat4, (int) $cat5];
-                $color = ['#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54'];
+                $max   = [(int) $cat1, (int) $cat2, (int) $cat3];
+                $color = ['#ff7b54', '#ff7b54', '#ff7b54'];
                 break;
         }
         return view('index', [

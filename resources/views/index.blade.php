@@ -234,7 +234,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'World population per region (in millions)'
+                        text: 'Statistik'
                     }
                 }
             });

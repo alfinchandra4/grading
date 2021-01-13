@@ -15,11 +15,9 @@ class AqCategorySeeder extends Seeder
     public function run()
     {
         $data = [ 
-            ['category' => 'Akademik dan Kemahasiswaan'], 
-            ['category' => 'Keuangan'], 
-            ['category' => 'Administrasi Umum'],
-            ['category' => 'Program Studi'], 
-            ['category' => 'Labolatorium'],
+            ['category' => 'Umum'], 
+            ['category' => 'Mutu dan Kompetensi Lulusan'], 
+            ['category' => 'Kebutuhan Stakeholder Kota'],
         ];
         DB::table('aq_categories')->insert($data);
     }

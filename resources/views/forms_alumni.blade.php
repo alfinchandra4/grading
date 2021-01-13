@@ -28,7 +28,7 @@
         </div>
         <div class="card question offset-1 col-10 mt-5">
             <div class="card-body">
-                <div class="question-category fw-bold h5">{{ session('category')['category'] }} ({{session('category')['id']}} of 5)</div>
+                <div class="question-category fw-bold h5">{{ session('category')['category'] }} ({{session('category')['id']}} of 3)</div>
                 <div class="question-answer">
                     <form action="{{ route('alumni.form.store') }}" method="post" id="fillFrm">
                         @csrf
