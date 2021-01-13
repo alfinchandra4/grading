@@ -65,9 +65,11 @@
                         @endauth
                         <li class="nav-item">
                         </li>
+                        @if (auth('administrator')->check() || auth('dean')->check())
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Help</a>
+                            <a class="nav-link {{ session('complain') == true ? 'active' : '' }}" href="{{ route('complain.list', 1) }}">Complains</a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             @auth('student')
                                 <a class="nav-link" href="/logout/student">Log out</a>
@@ -77,6 +79,12 @@
                             @endauth
                             @auth('alumni')
                                 <a class="nav-link" href="/logout/alumni">Log out</a>
+                            @endauth
+                            @auth('dean')
+                                <a class="nav-link" href="/logout/alumni">Log out</a>
+                            @endauth
+                            @auth('administrator')
+                                <a class="nav-link" href="/logout/administrator">Log out</a>
                             @endauth
                         </li>
                     </ul>

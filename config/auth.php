@@ -56,6 +56,16 @@ return [
             'provider' => 'alumnus',
         ],
 
+        'dean' => [
+            'driver' => 'session',
+            'provider' => 'deans',
+        ],
+
+        'administrator' => [
+            'driver' => 'session',
+            'provider' => 'administrators',
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -99,6 +109,16 @@ return [
         'alumnus' => [
             'driver' => 'eloquent',
             'model' => App\Models\Alumni::class,
+        ],
+
+        'deans' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dean::class,
+        ],
+
+        'administrators' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrator::class,
         ],
 
         // 'users' => [

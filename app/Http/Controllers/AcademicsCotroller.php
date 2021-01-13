@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 class AcademicsCotroller extends Controller
 {
         public function index() {
+        session()->forget('complain');
         session()->put('actor', 1);
         session()->put('visual', 1);
         $routes = [
@@ -404,5 +405,33 @@ class AcademicsCotroller extends Controller
             'subject'   => $request->subject,
             'body'      => $request->body,
         ]);
+        session()->put('success', 'Anda telah mengisi form komplain');
+        return redirect()->back();
+    }
+
+    public function complain_list ($role_id) {
+        session()->forget('dashboard');
+        session()->put('complain', true);
+        session()->put('role', $role_id);
+        return view('report_complain_list');
+    }
+
+    public function complain_detail ($report_id) {
+        $report = Report::find($report_id);
+        return view('report_complain_detail', [
+            'data' => $report
+        ]);
+    }
+
+    public function complain_remove ($report_id) {
+        Report::find($report_id)->delete();
+        session()->put('success', 'Berhasil menghapus pengaduan');
+        return redirect()->route('complain.list', 1);
+    }
+
+    public function complain_received ($report_id) {
+        Report::find($report_id)->increment('status');
+        session()->put('success', 'Laporan telah diterima');
+        return redirect()->route('complain.list', 1);
     }
 }

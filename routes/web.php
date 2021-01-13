@@ -29,7 +29,7 @@ Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->nam
 Route::post('/login', [AuthController::class, 'attempt']);
 Route::get('/logout/{guard}', [AuthController::class, 'logout']);
 
-Route::group(['middleware' => 'auth:student,lecturer,alumni'], function () {
+Route::group(['middleware' => 'auth:student,lecturer,alumni,administrator,dean'], function () {
 
     Route::get('/dashboard', [AcademicsCotroller::class, 'index'])->name('dashboard');
 
@@ -66,13 +66,18 @@ Route::group(['middleware' => 'auth:student,lecturer,alumni'], function () {
     });
 
     Route::get('/complain', [AcademicsCotroller::class, 'complain'])->name('complain');
+    Route::post('/complain', [AcademicsCotroller::class, 'complain_store'])->name('complain.store');
+    Route::get('/complain/list/{role}', [AcademicsCotroller::class, 'complain_list'])->name('complain.list');
+    Route::get('/complain/{complain_id}', [AcademicsCotroller::class, 'complain_detail'])->name('complain.detail');
+    Route::get('/complain/{complain_id}/remove', [AcademicsCotroller::class, 'complain_remove'])->name('complain.remove');
+    Route::get('/complain/{complain_id}/received', [AcademicsCotroller::class, 'complain_received'])->name('complain.received');
 
     Route::get('/checkforms', [StudentController::class, 'checkforms']);
     Route::get('/clearforms', [StudentController::class, 'clearforms']);
 
 });
 
-route::get('mhs', function() {
+route::get('student', function() {
     return view('example.student');
 });
 
@@ -80,6 +85,14 @@ Route::get('alumni', function () {
     return view('example.alumni');
 });
 
-Route::get('dosen', function () {
+Route::get('lecturer', function () {
     return view('example.lecturer');
+});
+
+Route::get('administrator', function () {
+    return view('example.administrator');
+});
+
+Route::get('dean', function () {
+    return view('example.dean');
 });

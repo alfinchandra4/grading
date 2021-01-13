@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Dean extends Model
+class Dean extends Authenticatable
 {
     use HasFactory;
 
+    protected $table = 'deans';
     protected $guarded = [];
 
 }

@@ -17,6 +17,12 @@
                 @auth('alumni')
                     {{ auth('alumni')->user()->name }} - {{ auth('alumni')->user()->nim }}
                 @endauth
+                @auth('dean')
+                    {{ auth('dean')->user()->name }}
+                @endauth
+                @auth('administrator')
+                    {{ auth('administrator')->user()->name }}
+                @endauth
                 <div class="float-end">
                     Periode Pengisian 2021 / 2022
                 </div>
@@ -28,6 +34,7 @@
 @section('monitor')
     <div class="monitor">
         <div class="container">
+        @if (auth()->guard('lecturer')->check() || auth()->guard('student')->check() || auth()->guard('alumni')->check())
             <div class="row mb-4">
                 <div class="col">
                     <a href="
@@ -58,6 +65,7 @@
                     </a>
                 </div>
             </div>
+        @endif
             <div class="row">
                 <div class="col">
                     <div class="card card-monitor total_student border-0">
@@ -285,7 +293,7 @@
         <script>
             var ctx = document.getElementById('myChart').getContext('2d');
             var densityData = {
-                label: 'Detail kategor',
+                label: 'Detail kategori',
                 data: {!! $max !!},
                 backgroundColor: {!! $color !!},
             };

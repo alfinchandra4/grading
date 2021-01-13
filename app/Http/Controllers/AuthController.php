@@ -22,6 +22,10 @@ class AuthController extends Controller
             return redirect('/dashboard');
         } elseif(Auth::guard('alumni')->attempt(['nim' => $request->identity, 'password' => $request->password ])) {
             return redirect('/dashboard');
+        } elseif(Auth::guard('dean')->attempt(['email' => $request->identity, 'password' => $request->password ])) {
+            return redirect('/dashboard');
+        } elseif(Auth::guard('administrator')->attempt(['email' => $request->identity, 'password' => $request->password ])) {
+            return redirect('/dashboard');
         }
     }
 

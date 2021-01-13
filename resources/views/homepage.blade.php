@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="{{ asset('styles.css') }}">
 
-    <title>Hello, world!</title>
+    <title>e-CRM UPN "Veteran" Jakarta</title>
 </head>
 
 <body>
@@ -48,7 +48,7 @@
                                             <form method="POST" action="/login" id="loginFrm">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="identity" class="form-label">NIM / NIDN</label>
+                                                    <label for="identity" class="form-label">NIM / NIDN / Email</label>
                                                     <input type="text" class="form-control" id="identity"
                                                         name="identity">
                                                 </div>
@@ -89,11 +89,9 @@
             <div class="h1 fw-bold" style="color:yellow">
                 UPN VETERAN JAKARTA
             </div>
-            <div class="caption offset-2 col-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, et ipsum. Sit neque dignissimos
-                nostrum laborum aperiam repellendus omnis tempora corporis, velit molestias ad accusantium reprehenderit
-                soluta eius culpa. Corrupti quaerat sint cumque exercitationem illum voluptatum quas delectus totam.
-                Nihil maiores, dolorum quibusdam delectus ipsa ex recusandae exercitationem sunt omnis!
+            <div class="caption offset-2 col-8 fw-light">
+                Website e-CRM UPN “Veteran” Jakarta merupakan website yang digunakan untuk mengukur tingkat kepuasan pelayanan di kampus UPNVJ. Dengan mengakses website ini Anda dapat memberikan penilaian anda mengenai kepuasan Anda pada pelayanan UPNVJ.
+                Segera berikan penilaian Anda untuk peningkatan pelayanan UPN “Veteran” Jakarta yang lebih Baik!
             </div>
         </div>
     </main>
