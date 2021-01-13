@@ -49,11 +49,13 @@
                     </a>
                 </div>
                 <div class="col">
-                    <div class="card card-monitor card-complaint border-0">
-                        <div class="card-body" style="color:white;">
-                            <span class="fw-bold h1">Report Complaint!</span>
+                    <a href="{{ route('complain') }}" style="text-decoration: none">
+                        <div class="card card-monitor card-complaint border-0">
+                            <div class="card-body" style="color:white;">
+                                <span class="fw-bold h1">Report Complaint!</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="row">

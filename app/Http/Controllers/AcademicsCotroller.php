@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Alumni;
 use App\Models\AqAnswer;
 use App\Models\LqAnswer;
+use App\Models\Report;
 use App\Models\SqAnswer;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AcademicsCotroller extends Controller
@@ -376,6 +378,31 @@ class AcademicsCotroller extends Controller
             'labels' => json_encode($categories),
             'max'   => json_encode($max),
             'color'  => json_encode($color),
+        ]);
+    }
+
+    public function complain () {
+        return view('report_complain');
+    }
+
+    public function complain_store (Request $request) {
+        if (Auth::guard('student')->check()) {
+            $user_type = 1;
+            $user_id   = Auth::guard('student')->user()->id;
+        }
+        if (Auth::guard('lecturer')->check()) {
+            $user_type = 2;
+            $user_id   = Auth::guard('lecturer')->user()->id;
+        }
+        if (Auth::guard('alumni')->check()) {
+            $user_type = 3;
+            $user_id   = Auth::guard('alumni')->user()->id;
+        }
+        Report::create([
+            'user_type' => $user_type,
+            'user_id'   => $user_id,
+            'subject'   => $request->subject,
+            'body'      => $request->body,
         ]);
     }
 }

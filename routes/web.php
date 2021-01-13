@@ -65,6 +65,8 @@ Route::group(['middleware' => 'auth:student,lecturer,alumni'], function () {
         Route::put('/profile', [AlumniController::class, 'profilestore'])->name('alumni.profile.store');
     });
 
+    Route::get('/complain', [AcademicsCotroller::class, 'complain'])->name('complain');
+
     Route::get('/checkforms', [StudentController::class, 'checkforms']);
     Route::get('/clearforms', [StudentController::class, 'clearforms']);
 
