@@ -57,6 +57,7 @@
                                                     <input type="password" class="form-control" id="password"
                                                         name="password" value="password">
                                                 </div>
+                                                <a href="/guest/dashboard" style="text-decoration:none">Log in as Guest</a>
                                             </form>
                                         </div>
                                         <div class="modal-footer">

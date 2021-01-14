@@ -48,10 +48,19 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 header_menu">
-                        <li class="nav-item">
-                            <a class="nav-link {{ session('dashboard') == true ? 'active' : '' }}"
-                                href="{{ route('dashboard') }}">Home</a>
-                        </li>
+                        @if (auth('student')->check() || 
+                             auth('lecturer')->check() || 
+                             auth('alumni')->check() ||
+                             auth('administrator')->check() ||
+                             auth('dean')->check())
+                            <li class="nav-item">
+                                <a class="nav-link {{ session('dashboard') == true ? 'active' : '' }}"
+                                    href="{{ route('dashboard') }}">Home</a>
+                            </li>
+                        @else
+                            <a href="/" style="text-decoration: none; color: black">Homepage</a>
+                        @endif
+
                         @auth('student')
                             <a class="nav-link {{ Route::currentRouteName() == 'student.profile' ? 'active' : '' }}"
                                 href="{{ route('student.profile') }}">Profile</a>
@@ -67,7 +76,8 @@
                         </li>
                         @if (auth('administrator')->check() || auth('dean')->check())
                         <li class="nav-item">
-                            <a class="nav-link {{ session('complain') == true ? 'active' : '' }}" href="{{ route('complain.list', 1) }}">Complains</a>
+                            <a class="nav-link {{ session('complain') == true ? 'active' : '' }}" 
+                               href="{{ route('complain.list', 1) }}">Complains</a>
                         </li>
                         @endif
                         <li class="nav-item">

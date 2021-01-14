@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\AcademicsCotroller;
+use App\Http\Controllers\AcademicsController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\GuestController;
 use App\Models\Alumni;
 use Illuminate\Support\Facades\Session;
 
@@ -31,14 +32,14 @@ Route::get('/logout/{guard}', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => 'auth:student,lecturer,alumni,administrator,dean'], function () {
 
-    Route::get('/dashboard', [AcademicsCotroller::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AcademicsController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'actor'], function () {
-        Route::get('{role}', [AcademicsCotroller::class, 'actortype'])->name('actortype');
-        Route::get('{role}/summary', [AcademicsCotroller::class, 'summary'])->name('visual.summary');
-        Route::get('{role}/line',    [AcademicsCotroller::class, 'line'])->name('visual.line');
-        Route::get('{role}/bar',     [AcademicsCotroller::class, 'bar'])->name('visual.bar');
-        Route::get('{role}/detail',  [AcademicsCotroller::class, 'detail'])->name('visual.detail');
+        Route::get('{role}', [AcademicsController::class, 'actortype'])->name('actortype');
+        Route::get('{role}/summary', [AcademicsController::class, 'summary'])->name('visual.summary');
+        Route::get('{role}/line',    [AcademicsController::class, 'line'])->name('visual.line');
+        Route::get('{role}/bar',     [AcademicsController::class, 'bar'])->name('visual.bar');
+        Route::get('{role}/detail',  [AcademicsController::class, 'detail'])->name('visual.detail');
     });
 
     Route::group(['prefix' => 'student'], function () {
@@ -65,16 +66,31 @@ Route::group(['middleware' => 'auth:student,lecturer,alumni,administrator,dean']
         Route::put('/profile', [AlumniController::class, 'profilestore'])->name('alumni.profile.store');
     });
 
-    Route::get('/complain', [AcademicsCotroller::class, 'complain'])->name('complain');
-    Route::post('/complain', [AcademicsCotroller::class, 'complain_store'])->name('complain.store');
-    Route::get('/complain/list/{role}', [AcademicsCotroller::class, 'complain_list'])->name('complain.list');
-    Route::get('/complain/{complain_id}', [AcademicsCotroller::class, 'complain_detail'])->name('complain.detail');
-    Route::get('/complain/{complain_id}/remove', [AcademicsCotroller::class, 'complain_remove'])->name('complain.remove');
-    Route::get('/complain/{complain_id}/received', [AcademicsCotroller::class, 'complain_received'])->name('complain.received');
+    Route::group(['prefix' => 'complain'], function () {
+        Route::get('/', [AcademicsController::class, 'complain'])->name('complain');
+        Route::post('/', [AcademicsController::class, 'complain_store'])->name('complain.store');
+        Route::get('/list/{role}', [AcademicsController::class, 'complain_list'])->name('complain.list');
+        Route::get('/{complain_id}', [AcademicsController::class, 'complain_detail'])->name('complain.detail');
+        Route::get('/{complain_id}/remove', [AcademicsController::class, 'complain_remove'])->name('complain.remove');
+        Route::get('/{complain_id}/received', [AcademicsController::class, 'complain_received'])->name('complain.received'); 
+    });
 
     Route::get('/checkforms', [StudentController::class, 'checkforms']);
     Route::get('/clearforms', [StudentController::class, 'clearforms']);
 
+});
+
+Route::group(['prefix' => 'guest'], function () {
+
+    Route::get('/dashboard', [GuestController::class, 'index'])->name('guest.dashboard');
+
+    Route::group(['prefix' => 'actor'], function () {
+        Route::get('{role}', [GuestController::class, 'actortype'])->name('guest.actortype');
+        Route::get('{role}/summary', [GuestController::class, 'summary'])->name('guest.visual.summary');
+        Route::get('{role}/line',    [GuestController::class, 'line'])->name('guest.visual.line');
+        Route::get('{role}/bar',     [GuestController::class, 'bar'])->name('guest.visual.bar');
+        Route::get('{role}/detail',  [GuestController::class, 'detail'])->name('guest.visual.detail');
+    });
 });
 
 route::get('student', function() {

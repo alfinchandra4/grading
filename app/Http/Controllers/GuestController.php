@@ -5,28 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Alumni;
 use App\Models\AqAnswer;
 use App\Models\LqAnswer;
-use App\Models\Report;
 use App\Models\SqAnswer;
 use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class AcademicsController extends Controller
+class GuestController extends Controller
 {
         public function index() {
         session()->forget('complain');
         session()->put('actor', 1);
         session()->put('visual', 1);
         $routes = [
-            'visual.summary',
-            'visual.line',
-            'visual.bar',
-            'visual.detail'
+            'guest.visual.summary',
+            'guest.visual.line',
+            'guest.visual.bar',
+            'guest.visual.detail'
         ];
         session()->put('routes', $routes);
         return redirect()->action(
-            [AcademicsController::class, 'actortype'], ['role' => 1]
+            [GuestController::class, 'actortype'], ['role' => 1]
         );
     }
 
@@ -35,7 +32,7 @@ class AcademicsController extends Controller
         session()->put('visual', 1);
         session()->put('dashboard', TRUE);
         return redirect()->action(
-            [AcademicsController::class, 'summary'], ['role' => $role]
+            [GuestController::class, 'summary'], ['role' => $role]
         );
     }
 
@@ -104,7 +101,7 @@ class AcademicsController extends Controller
             ];
         }
 
-        return view('index', [
+        return view('guest_index', [
             'percentage' => $percentage
         ]);
     }
@@ -127,7 +124,7 @@ class AcademicsController extends Controller
                 foreach ($array as $key => $value) {
                     $year [] = $key; $count [] = $value;
                 }
-                return view('index', [
+                return view('guest_index', [
                     'years' => json_encode($year),
                     'total' => json_encode($count),
                     'person' => $person,
@@ -145,7 +142,7 @@ class AcademicsController extends Controller
                 foreach ($array as $key => $value) {
                     $year [] = $key; $count [] = $value;
                 }
-                return view('index', [
+                return view('guest_index', [
                     'years' => json_encode($year),
                     'total' => json_encode($count),
                     'person' => $person,
@@ -163,7 +160,7 @@ class AcademicsController extends Controller
                 foreach ($array as $key => $value) {
                     $year [] = $key; $count [] = $value;
                 }
-                return view('index', [
+                return view('guest_index', [
                     'years' => json_encode(array_reverse($year)),
                     'total' => json_encode(array_reverse($count)),
                     'person' => $person,
@@ -279,7 +276,7 @@ class AcademicsController extends Controller
                 $data = [(int) $finalSi, (int) $finalTi, (int)$finalMi];
                 break;
         }
-        return view('index', [
+        return view('guest_index', [
             'data' => json_encode($data)
         ]);
     }
@@ -371,63 +368,10 @@ class AcademicsController extends Controller
                 $color = ['#ff7b54', '#ff7b54', '#ff7b54'];
                 break;
         }
-        return view('index', [
+        return view('guest_index', [
             'labels' => json_encode($categories),
             'max'   => json_encode($max),
             'color'  => json_encode($color),
         ]);
-    }
-
-    public function complain () {
-        return view('report_complain');
-    }
-
-    public function complain_store (Request $request) {
-        if (Auth::guard('student')->check()) {
-            $user_type = 1;
-            $user_id   = Auth::guard('student')->user()->id;
-        }
-        if (Auth::guard('lecturer')->check()) {
-            $user_type = 2;
-            $user_id   = Auth::guard('lecturer')->user()->id;
-        }
-        if (Auth::guard('alumni')->check()) {
-            $user_type = 3;
-            $user_id   = Auth::guard('alumni')->user()->id;
-        }
-        Report::create([
-            'user_type' => $user_type,
-            'user_id'   => $user_id,
-            'subject'   => $request->subject,
-            'body'      => $request->body,
-        ]);
-        session()->put('success', 'Anda telah mengisi form komplain');
-        return redirect()->back();
-    }
-
-    public function complain_list ($role_id) {
-        session()->forget('dashboard');
-        session()->put('complain', true);
-        session()->put('role', $role_id);
-        return view('report_complain_list');
-    }
-
-    public function complain_detail ($report_id) {
-        $report = Report::find($report_id);
-        return view('report_complain_detail', [
-            'data' => $report
-        ]);
-    }
-
-    public function complain_remove ($report_id) {
-        Report::find($report_id)->delete();
-        session()->put('success', 'Berhasil menghapus pengaduan');
-        return redirect()->route('complain.list', 1);
-    }
-
-    public function complain_received ($report_id) {
-        Report::find($report_id)->increment('status');
-        session()->put('success', 'Laporan telah diterima');
-        return redirect()->route('complain.list', 1);
     }
 }
