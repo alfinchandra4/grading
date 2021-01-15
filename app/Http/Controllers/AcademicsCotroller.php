@@ -144,7 +144,7 @@ class AcademicsController extends Controller
 
                 }
                 $arrOther = [
-                    [ 'year' => 2020, 'percentage' => 80, ],[ 'year' => 2019, 'percentage' => 65, ]
+                    [ 'year' => 2019, 'percentage' => 80, ],[ 'year' => 2020, 'percentage' => 65, ]
                 ];
 
                 $data = array_merge($arrOther, $arrData);
@@ -179,7 +179,7 @@ class AcademicsController extends Controller
                         $arrData [] = [ 'year' => $year->year, 'percentage' => $numberOfTrueAnswer ];
                 }
                 $arrOther = [
-                    [ 'year' => 2020, 'percentage' => 70, ],[ 'year' => 2019, 'percentage' => 85, ]
+                    [ 'year' => 2019, 'percentage' => 70, ],[ 'year' => 2020, 'percentage' => 85, ]
                 ];
 
                 $data = array_merge($arrOther, $arrData);
@@ -219,7 +219,7 @@ class AcademicsController extends Controller
 
                 }
                 $arrOther = [
-                    [ 'year' => 2020, 'percentage' => 80, ],[ 'year' => 2019, 'percentage' => 90, ]
+                    [ 'year' => 2019, 'percentage' => 80, ],[ 'year' => 2020, 'percentage' => 90, ]
                 ];
                 $data = array_merge($arrOther, $arrData);
                 $years = []; $percentage = [];
@@ -350,12 +350,11 @@ class AcademicsController extends Controller
                 $categories = [
                     'Tangibles', 'Reliability', 'Responsiveness', 'Assurance', 'Empathy'
                 ];  
-
-                $avg_cat1 = $cat1 / $countStudent;
-                $avg_cat2 = $cat2 / $countStudent;
-                $avg_cat3 = $cat3 / $countStudent;
-                $avg_cat4 = $cat4 / $countStudent;
-                $avg_cat5 = $cat5 / $countStudent;
+                $cat1 == 0 ? $avg_cat1 = 0 : $avg_cat1 = $cat1 / $countStudent;
+                $cat2 == 0 ? $avg_cat2 = 0 : $avg_cat2 = $cat2 / $countStudent;
+                $cat3 == 0 ? $avg_cat3 = 0 : $avg_cat3 = $cat3 / $countStudent;
+                $cat4 == 0 ? $avg_cat4 = 0 : $avg_cat4 = $cat4 / $countStudent;
+                $cat5 == 0 ? $avg_cat5 = 0 : $avg_cat5 = $cat5 / $countStudent;
                     
                 $max   = [
                     number_format((float)$avg_cat1, 2, '.', ''),
@@ -401,14 +400,14 @@ class AcademicsController extends Controller
                     $cat8 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 8)->sum('answer') / 3;
                 }
 
-                $avg_cat1 = $cat1 / $countlecturer;
-                $avg_cat2 = $cat2 / $countlecturer;
-                $avg_cat3 = $cat3 / $countlecturer;
-                $avg_cat4 = $cat4 / $countlecturer;
-                $avg_cat5 = $cat5 / $countlecturer;
-                $avg_cat6 = $cat6 / $countlecturer;
-                $avg_cat7 = $cat7 / $countlecturer;
-                $avg_cat8 = $cat8 / $countlecturer;
+                $cat1 == 0 ? $avg_cat1 = 0 : $avg_cat1 = $cat1 / $countlecturer;
+                $cat2 == 0 ? $avg_cat2 = 0 : $avg_cat2 = $cat2 / $countlecturer;
+                $cat3 == 0 ? $avg_cat3 = 0 : $avg_cat3 = $cat3 / $countlecturer;
+                $cat4 == 0 ? $avg_cat4 = 0 : $avg_cat4 = $cat4 / $countlecturer;
+                $cat5 == 0 ? $avg_cat5 = 0 : $avg_cat5 = $cat5 / $countlecturer;
+                $cat6 == 0 ? $avg_cat6 = 0 : $avg_cat6 = $cat6 / $countlecturer;
+                $cat7 == 0 ? $avg_cat7 = 0 : $avg_cat7 = $cat7 / $countlecturer;
+                $cat8 == 0 ? $avg_cat8 = 0 : $avg_cat8 = $cat8 / $countlecturer;
                     
                 $max   = [
                     number_format((float)$avg_cat1, 2, '.', ''),
@@ -445,9 +444,9 @@ class AcademicsController extends Controller
                     $cat3 += AqAnswer::where('alumni_id', $alumni_id)->where('aq_category_id', 3)->sum('answer') / 5;
                 }
 
-                $avg_cat1 = $cat1 / $countalumni;
-                $avg_cat2 = $cat2 / $countalumni;
-                $avg_cat3 = $cat3 / $countalumni;
+                $cat1 == 0 ? $avg_cat1 = 0 : $avg_cat1 = $cat1 / $countalumni;
+                $cat2 == 0 ? $avg_cat2 = 0 : $avg_cat2 = $cat2 / $countalumni;
+                $cat3 == 0 ? $avg_cat3 = 0 : $avg_cat3 = $cat3 / $countalumni;
                     
                 $max   = [
                     number_format((float)$avg_cat1, 2, '.', ''),

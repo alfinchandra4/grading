@@ -24,7 +24,6 @@ class CreateLecturersTable extends Migration
             $table->date('dob'); // date of birth
             $table->char('phone');
             $table->char('email');
-            $table->dateTime('filled')->nullable();
             $table->timestamps();
         });
     }
