@@ -24,7 +24,7 @@
               Pengaduan Mahasiswa
            </div>
            <div>
-              <a href="{{ route('student_export') }}" class="text-decoration-none" style="color: black"> <i class="fa fa-file-excel" aria-hidden="true"></i> Lihat laporan  </a>
+            
            </div>
           </div>
             <div class="card-body">

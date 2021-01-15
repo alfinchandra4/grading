@@ -80,6 +80,33 @@
                             <a class="nav-link {{ session('complain') == true ? 'active' : '' }}" 
                                href="{{ route('complain.list', 1) }}">Complains</a>
                         </li>
+                        <li class="nav-item">
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="nav-link"
+                               href="#">Laporan</a>
+                        </li>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Daftar laporan</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <a href="{{ route('student_export')}}" class="list-group-item list-group-item-action">
+                                            <i class="fa fa-file-excel" aria-hidden="true"></i> Laporan Kuisioner Mahasiswa
+                                        </a>
+                                        <a href="{{ route('lecturer_export')}}" class="list-group-item list-group-item-action">
+                                            <i class="fa fa-file-excel" aria-hidden="true"></i> Laporan Kuisioner Dosen
+                                        </a>
+                                        <a href="{{ route('alumni_export')}}" class="list-group-item list-group-item-action">
+                                            <i class="fa fa-file-excel" aria-hidden="true"></i> Laporan Kuisioner Alumni
+                                        </a>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         @endif
                         <li class="nav-item">
                             @auth('student')
