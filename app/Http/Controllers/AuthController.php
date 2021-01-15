@@ -27,6 +27,7 @@ class AuthController extends Controller
         } elseif(Auth::guard('administrator')->attempt(['email' => $request->identity, 'password' => $request->password ])) {
             return redirect('/dashboard');
         }
+            return back()->withError('Invalid Credentials');
     }
 
     public function logout($guard) {

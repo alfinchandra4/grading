@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AcademicsController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\GuestController;
 use App\Models\Alumni;
@@ -92,6 +93,10 @@ Route::group(['prefix' => 'guest'], function () {
         Route::get('{role}/detail',  [GuestController::class, 'detail'])->name('guest.visual.detail');
     });
 });
+
+Route::get('/student-export', [ExcelController::class, 'student_export'])->name('student_export');
+Route::get('/alumni-export',  [ExcelController::class, 'alumni_export'])->name('alumni_export');
+Route::get('/lecturer-export', [ExcelController::class, 'lecturer_export'])->name('lecturer_export');
 
 route::get('student', function() {
     return view('example.student');

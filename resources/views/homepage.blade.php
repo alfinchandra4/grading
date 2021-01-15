@@ -16,6 +16,25 @@
 </head>
 
 <body>
+
+    @if (session('success'))
+        <script>
+            alert("{{ session('success') }}");
+        </script>
+        @php
+            session()->forget('success');
+        @endphp
+    @endif
+
+    @if (session('error'))
+        <script>
+            alert("{{ session('error') }}");
+        </script>
+        @php
+            session()->forget('error');
+        @endphp
+    @endif
+
     {{-- HEADER --}}
     <header>
         <nav class="navbar navbar-expand-lg navbar-light"
@@ -50,12 +69,12 @@
                                                 <div class="mb-3">
                                                     <label for="identity" class="form-label">NIM / NIDN / Email</label>
                                                     <input type="text" class="form-control" id="identity"
-                                                        name="identity">
+                                                        name="identity" required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="password" class="form-label">Password</label>
                                                     <input type="password" class="form-control" id="password"
-                                                        name="password" value="password">
+                                                        name="password" required>
                                                 </div>
                                                 <a href="/guest/dashboard" style="text-decoration:none">Log in as Guest</a>
                                             </form>
@@ -69,9 +88,9 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="#">Contact Us</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </div>

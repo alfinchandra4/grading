@@ -70,7 +70,8 @@
                                 href="{{ route('lecturer.profile') }}">Profile</a>
                         @endauth
                         @auth('alumni')
-                            <a href="#" class="nav-link">Profile</a>
+                            <a class="nav-link {{ Route::currentRouteName() == 'alumni.profile' ? 'active' : '' }}"
+                                href="{{ route('alumni.profile') }}">Profile</a>
                         @endauth
                         <li class="nav-item">
                         </li>

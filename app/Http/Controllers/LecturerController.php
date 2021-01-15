@@ -91,6 +91,8 @@ class LecturerController extends Controller
             }
         }
 
+        Lecturer::find(Auth::guard('lecturer')->user()->id)->update([ 'filled' => date('Y-m-d H:i:s') ]);
+
         session()->put('success', 'Berhasil isi formulir kuisioner');
         return redirect()->route('dashboard');
             

@@ -235,6 +235,17 @@
                     title: {
                         display: true,
                         text: 'Statistik'
+                    },
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            stacked: true,
+                            ticks: {
+                                min: 0, // minimum value
+                                max: 100, // maximum value,
+                                stepSize: 25
+                            }
+                        }]
                     }
                 }
             });
@@ -266,8 +277,12 @@
                 options: {
                     scales: {
                         yAxes: [{
+                            display: true,
+                            stacked: true,
                             ticks: {
-                                beginAtZero: true
+                                min: 0, // minimum value
+                                max: 100, // maximum value,
+                                stepSize: 25
                             }
                         }]
                     },
@@ -308,7 +323,9 @@
                     scales: {
                         xAxes: [{
                             ticks: {
-                                beginAtZero: true
+                                min: 0, // minimum value
+                                max: 4, // maximum value,
+                                stepSize: 1
                             }
                         }]
                     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumni;
 use App\Models\AqAnswer;
+use App\Models\Lecturer;
 use App\Models\LqAnswer;
 use App\Models\Report;
 use App\Models\SqAnswer;
@@ -118,54 +119,117 @@ class AcademicsController extends Controller
         switch ($role) {
             case 1:
                 $person = 'Mahasiswa';
-                $datas = DB::table('sq_answers as sns')->selectRaw('YEAR(sns.created_at) as year, sns.student_id')->distinct()->get()->toArray();
-                foreach ($datas as $value) {
-                    array_key_exists($value->year, $array) ? 
-                        $array[$value->year] += 1 :                         
-                        $array[$value->year] = 1;
+                $students = DB::table('students')->selectRaw('YEAR(students.filled) as year')->where('filled' ,'!=', null)->distinct()->get();
+                $arrData = [];
+                // loop berdasarkan tahun menghasilkan year di variabel value
+                foreach ($students as $year) {
+                    // menghasilkan student id pertahun
+                    $studentsPerYears = Student::whereYear('filled', $year->year)->select('id')->get()->toArray();
+                    $numberOfStudents = count($studentsPerYears);
+                    $data = 0;
+                    $numberOfTrueAnswer = 0;
+
+                    // loop berdasarkan tiap2 student id yg tahunnya sama
+                        foreach ($studentsPerYears as $key => $value) {
+                            $trueanswer = SqAnswer::where('student_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = (int) $trueanswer / 32 * 100;
+                            $numberOfTrueAnswer += $trueanswer;
+                        }
+                        $numberOfTrueAnswer = $numberOfTrueAnswer / $numberOfStudents;
+                        $arrData [] =
+                            [
+                                'year' => $year->year,
+                                'percentage' => $numberOfTrueAnswer
+                            ];
+
                 }
-                foreach ($array as $key => $value) {
-                    $year [] = $key; $count [] = $value;
+                $arrOther = [
+                    [ 'year' => 2020, 'percentage' => 80, ],[ 'year' => 2019, 'percentage' => 65, ]
+                ];
+
+                $data = array_merge($arrOther, $arrData);
+                $years = []; $percentage = [];
+                foreach ($data as $key => $value) {
+                    $years [] = $value['year'];
+                    $percentage [] = $value['percentage'];
                 }
                 return view('index', [
-                    'years' => json_encode($year),
-                    'total' => json_encode($count),
+                    'years' => json_encode($years),
+                    'total' => json_encode($percentage),
                     'person' => $person,
                 ]);
                 break;
             
             case 2:
                 $person = 'Dosen';
-                $datas = DB::table('lq_answers as lns')->selectRaw('YEAR(lns.created_at) as year, lns.lecturer_id')->distinct()->get()->toArray();
-                foreach ($datas as $value) {
-                    array_key_exists($value->year, $array) ? 
-                        $array[$value->year] += 1 :                         
-                        $array[$value->year] = 1;
+
+                $lecturer = DB::table('lecturers')->selectRaw('YEAR(lecturers.filled) as year')->where('filled' ,'!=', null)->distinct()->get();
+                $arrData = [];
+                foreach ($lecturer as $year) {
+                    $lecturerPerYears = Lecturer::whereYear('filled', $year->year)->select('id')->get()->toArray();
+                    $numberOflecturer = count($lecturerPerYears);
+                    $data = 0;
+                    $numberOfTrueAnswer = 0;
+                        foreach ($lecturerPerYears as $key => $value) {
+                            $trueanswer = LqAnswer::where('lecturer_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = (int) $trueanswer / 44 * 100;
+                            $numberOfTrueAnswer += $trueanswer;
+                        }
+                        $numberOfTrueAnswer = $numberOfTrueAnswer / $numberOflecturer;
+                        $arrData [] = [ 'year' => $year->year, 'percentage' => $numberOfTrueAnswer ];
                 }
-                foreach ($array as $key => $value) {
-                    $year [] = $key; $count [] = $value;
+                $arrOther = [
+                    [ 'year' => 2020, 'percentage' => 70, ],[ 'year' => 2019, 'percentage' => 85, ]
+                ];
+
+                $data = array_merge($arrOther, $arrData);
+                $years = []; $percentage = [];
+                foreach ($data as $key => $value) {
+                    $years [] = $value['year'];
+                    $percentage [] = $value['percentage'];
                 }
+
                 return view('index', [
-                    'years' => json_encode($year),
-                    'total' => json_encode($count),
+                    'years' => json_encode($years),
+                    'total' => json_encode($percentage),
                     'person' => $person,
                 ]);
                 break;
 
             case 3:
                 $person = 'Alumni';
-                $datas = DB::table('aq_answers as ans')->selectRaw('YEAR(ans.created_at) as year, ans.alumni_id')->distinct()->get()->toArray();
-                foreach ($datas as $value) {
-                    array_key_exists($value->year, $array) ? 
-                        $array[$value->year] += 1 :                         
-                        $array[$value->year] = 1;
+                $alumni = DB::table('alumnus')->selectRaw('YEAR(alumnus.filled) as year')->where('filled' ,'!=', null)->distinct()->get();
+                $arrData = [];
+                foreach ($alumni as $year) {
+                    $alumniPerYears = Alumni::whereYear('filled', $year->year)->select('id')->get()->toArray();
+                    $numberOfalumni = count($alumniPerYears);
+                    $data = 0;
+                    $numberOfTrueAnswer = 0;
+                        foreach ($alumniPerYears as $key => $value) {
+                            $trueanswer = AqAnswer::where('alumni_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = (int) $trueanswer / 18 * 100;
+                            $numberOfTrueAnswer += $trueanswer;
+                        }
+                        $numberOfTrueAnswer = $numberOfTrueAnswer / $numberOfalumni;
+                        $arrData [] =
+                            [
+                                'year' => $year->year,
+                                'percentage' => $numberOfTrueAnswer
+                            ];
+
                 }
-                foreach ($array as $key => $value) {
-                    $year [] = $key; $count [] = $value;
+                $arrOther = [
+                    [ 'year' => 2020, 'percentage' => 80, ],[ 'year' => 2019, 'percentage' => 90, ]
+                ];
+                $data = array_merge($arrOther, $arrData);
+                $years = []; $percentage = [];
+                foreach ($data as $key => $value) {
+                    $years [] = $value['year'];
+                    $percentage [] = $value['percentage'];
                 }
                 return view('index', [
-                    'years' => json_encode(array_reverse($year)),
-                    'total' => json_encode(array_reverse($count)),
+                    'years' => json_encode($years),
+                    'total' => json_encode($percentage),
                     'person' => $person,
                 ]);
                 break;
@@ -173,115 +237,96 @@ class AcademicsController extends Controller
         }
 
     }
-
     // Perbandingan
     public function bar ($role) {
         session()->put('visual', 3);
 
         switch ($role) {
             case 1:
-                $studentsWhoAnswers = SqAnswer::select('student_id')->groupBy('student_id')->get()->toArray();
+                $studentsWhoAnswers = SqAnswer::select('student_id')->groupBy('student_id')->get();
 
-                // Si
-                $siStudents = Student::whereIn('id', $studentsWhoAnswers)->where('major', 1)->select('id')->get()->toArray();
-                $siStudentAmount = Student::whereIn('id', $studentsWhoAnswers)->where('major', 1)->count();
-                $siStudentAverage = 0;
-                foreach ($siStudents as $key => $std) {
-                    $student_answered = SqAnswer::where('student_id', $std);
-                    $answer_c1 = $student_answered->where('sq_category_id', 1)->sum('answer') / 7;
-                    $answer_c2 = $student_answered->where('sq_category_id', 2)->sum('answer') / 8;
-                    $answer_c3 = $student_answered->where('sq_category_id', 3)->sum('answer') / 6;
-                    $answer_c4 = $student_answered->where('sq_category_id', 4)->sum('answer') / 5;
-                    $answer_c5 = $student_answered->where('sq_category_id', 5)->sum('answer') / 6;
-                    $siStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // SI
+                $si = Student::whereIn('id', $studentsWhoAnswers)->where('major', 1)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $siTotalAnswer = 0;
+                $siNumberOfStudent = count($si);
+                foreach ($si as $key => $std) {
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $siTotalAnswer += $answers;
                 }
-                $siStudentAverage == 0 ? $finalSi = 0 : $finalSi = ($siStudentAverage * 100) / $siStudentAmount;
+                $siTotalAnswer == 0 ? $siTotalAnswer = 0 : $siTotalAnswer /= $siNumberOfStudent;
 
-                // Ti
-                $tiStudents = Student::whereIn('id', $studentsWhoAnswers)->where('major', 2)->select('id')->get()->toArray();
-                $tiStudentAmount = Student::whereIn('id', $studentsWhoAnswers)->where('major', 2)->count();
-                $tiStudentAverage = 0;
-                foreach ($tiStudents as $key => $std) {
-                    $student_answered = SqAnswer::where('student_id', $std);
-                    $answer_c1 = $student_answered->where('sq_category_id', 1)->sum('answer') / 7;
-                    $answer_c2 = $student_answered->where('sq_category_id', 2)->sum('answer') / 8;
-                    $answer_c3 = $student_answered->where('sq_category_id', 3)->sum('answer') / 6;
-                    $answer_c4 = $student_answered->where('sq_category_id', 4)->sum('answer') / 5;
-                    $answer_c5 = $student_answered->where('sq_category_id', 5)->sum('answer') / 6;
-                    $tiStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // TI
+                $ti = Student::whereIn('id', $studentsWhoAnswers)->where('major', 2)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $tiTotalAnswer = 0;
+                $tiNumberOfStudent = count($ti);
+                foreach ($ti as $key => $std) {
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $tiTotalAnswer += $answers;
                 }
-                $tiStudentAverage == 0 ? $finalTi = 0 :  $finalTi = ($tiStudentAverage * 100) / $tiStudentAmount;
+                $tiTotalAnswer == 0 ? $tiTotalAnswer = 0 : $tiTotalAnswer /= $tiNumberOfStudent;
 
-                //
-                $miStudents = Student::whereIn('id', $studentsWhoAnswers)->where('major', 3)->select('id')->get()->toArray();
-                $miStudentAmount = Student::whereIn('id', $studentsWhoAnswers)->where('major', 3)->count();
-                $miStudentAverage = 0;
-                foreach ($miStudents as $key => $std) {
-                    $student_answered = SqAnswer::where('student_id', $std);
-                    $answer_c1 = $student_answered->where('sq_category_id', 1)->sum('answer') / 7;
-                    $answer_c2 = $student_answered->where('sq_category_id', 2)->sum('answer') / 8;
-                    $answer_c3 = $student_answered->where('sq_category_id', 3)->sum('answer') / 6;
-                    $answer_c4 = $student_answered->where('sq_category_id', 4)->sum('answer') / 5;
-                    $answer_c5 = $student_answered->where('sq_category_id', 5)->sum('answer') / 6;
-                    $miStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // MI
+                $mi = Student::whereIn('id', $studentsWhoAnswers)->where('major', 3)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $miTotalAnswer = 0;
+                $miNumberOfStudent = count($mi);
+                foreach ($mi as $key => $std) {
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $miTotalAnswer += $answers;
                 }
-                $miStudentAverage == 0 ? $finalMi = 0 : $finalMi = ($miStudentAverage * 100) / $miStudentAmount;
+                $miTotalAnswer == 0 ? $miTotalAnswer = 0 : $miTotalAnswer /= $miNumberOfStudent;
 
-                $data = [(int) $finalSi, (int) $finalTi, (int)$finalMi];
-                // dd($data);
+                $data = [(int) $siTotalAnswer, (int) $tiTotalAnswer, (int) $miTotalAnswer];
+
+                return view('index', [
+                    'data' => json_encode($data)
+                ]);
+                break;
+
             case 3:
-                $studentsWhoAnswers = AqAnswer::select('alumni_id')->groupBy('alumni_id')->get()->toArray();
+                $alumniWhoAnswers = AqAnswer::select('alumni_id')->groupBy('alumni_id')->get();
 
-                // Si
-                $siStudents = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 1)->select('id')->get()->toArray();
-                $siStudentAmount = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 1)->count();
-                $siStudentAverage = 0;
-                foreach ($siStudents as $key => $std) {
-                    $student_answered = AqAnswer::where('alumni_id', $std);
-                    $answer_c1 = $student_answered->where('aq_category_id', 1)->sum('answer') / 4;
-                    $answer_c2 = $student_answered->where('aq_category_id', 2)->sum('answer') / 2;
-                    $answer_c3 = $student_answered->where('aq_category_id', 3)->sum('answer') / 2;
-                    $answer_c4 = $student_answered->where('aq_category_id', 4)->sum('answer') / 7;
-                    $answer_c5 = $student_answered->where('aq_category_id', 5)->sum('answer') / 6;
-                    $siStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // SI
+                $si = Alumni::whereIn('id', $alumniWhoAnswers)->where('major', 1)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $siTotalAnswer = 0;
+                $siNumberOfAlumni = count($si);
+                foreach ($si as $key => $std) {
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $siTotalAnswer += $answers;
                 }
-                $siStudentAverage == 0 ? $finalSi = 0 : $finalSi = ($siStudentAverage * 100) / $siStudentAmount;
+                $siTotalAnswer == 0 ? $siTotalAnswer = 0 : $siTotalAnswer /= $siNumberOfAlumni;
 
-                // Ti
-                $tiStudents = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 2)->select('id')->get()->toArray();
-                $tiStudentAmount = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 2)->count();
-                $tiStudentAverage = 0;
-                foreach ($tiStudents as $key => $std) {
-                    $student_answered = AqAnswer::where('alumni_id', $std);
-                    $answer_c1 = $student_answered->where('aq_category_id', 1)->sum('answer') / 4;
-                    $answer_c2 = $student_answered->where('aq_category_id', 2)->sum('answer') / 2;
-                    $answer_c3 = $student_answered->where('aq_category_id', 3)->sum('answer') / 2;
-                    $answer_c4 = $student_answered->where('aq_category_id', 4)->sum('answer') / 7;
-                    $answer_c5 = $student_answered->where('aq_category_id', 5)->sum('answer') / 6;
-                    $tiStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // TI
+                $ti = Alumni::whereIn('id', $alumniWhoAnswers)->where('major', 2)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $tiTotalAnswer = 0;
+                $tiNumberOfAlumni = count($ti);
+                foreach ($ti as $key => $std) {
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $tiTotalAnswer += $answers;
                 }
-                $tiStudentAverage == 0 ? $finalTi = 0 :  $finalTi = ($tiStudentAverage * 100) / $tiStudentAmount;
+                $tiTotalAnswer == 0 ? $tiTotalAnswer = 0 : $tiTotalAnswer /= $tiNumberOfAlumni;
 
-                //
-                $miStudents = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 3)->select('id')->get()->toArray();
-                $miStudentAmount = Alumni::whereIn('id', $studentsWhoAnswers)->where('major', 3)->count();
-                $miStudentAverage = 0;
-                foreach ($miStudents as $key => $std) {
-                    $answer_c1 = AqAnswer::where('alumni_id', $std)->where('aq_category_id', 1)->sum('answer') / 4;
-                    $answer_c2 = AqAnswer::where('alumni_id', $std)->where('aq_category_id', 2)->sum('answer') / 2;
-                    $answer_c3 = AqAnswer::where('alumni_id', $std)->where('aq_category_id', 3)->sum('answer') / 2;
-                    $answer_c4 = AqAnswer::where('alumni_id', $std)->where('aq_category_id', 4)->sum('answer') / 7;
-                    $answer_c5 = AqAnswer::where('alumni_id', $std)->where('aq_category_id', 5)->sum('answer') / 6;
-                    $miStudentAverage += (($answer_c1 + $answer_c2 + $answer_c3 + $answer_c4 + $answer_c5) / 5);
+                // MI
+                $mi = Alumni::whereIn('id', $alumniWhoAnswers)->where('major', 3)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
+                $miTotalAnswer = 0;
+                $miNumberOfAlumni = count($mi);
+                foreach ($mi as $key => $std) {
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = (int) $answers / 32 * 100;
+                    $miTotalAnswer += $answers;
                 }
-                $miStudentAverage == 0 ? $finalMi = 0 : $finalMi = ($miStudentAverage * 100) / $miStudentAmount;
+                $miTotalAnswer == 0 ? $miTotalAnswer = 0 : $miTotalAnswer /= $miNumberOfAlumni;
 
-                $data = [(int) $finalSi, (int) $finalTi, (int)$finalMi];
+                $data = [(int) $siTotalAnswer, (int) $tiTotalAnswer, (int) $miTotalAnswer];
+                return view('index', [
+                    'data' => json_encode($data)
+                ]);
                 break;
         }
-        return view('index', [
-            'data' => json_encode($data)
-        ]);
     }
 
     public function detail ($role) {
@@ -289,32 +334,49 @@ class AcademicsController extends Controller
 
         switch ($role) {
             case 1: 
-                $studentsWhoAnswers = SqAnswer::select('student_id')->groupBy('student_id')->get()->toArray();
-                $studentLength = count($studentsWhoAnswers);
-                $categories = ['Tangibles', 'Reliability', 'Responsiveness', 'Assurance', 'Empathy'];
-                $cat1= 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0;
-
-                foreach ($studentsWhoAnswers as $key => $std) {
-                    $cat1 += SqAnswer::where('student_id', $std)->where('sq_category_id', 1)->sum('answer') / 7;
-                    $cat2 += SqAnswer::where('student_id', $std)->where('sq_category_id', 2)->sum('answer') / 8;
-                    $cat3 += SqAnswer::where('student_id', $std)->where('sq_category_id', 3)->sum('answer') / 6;
-                    $cat4 += SqAnswer::where('student_id', $std)->where('sq_category_id', 4)->sum('answer') / 5;
-                    $cat5 += SqAnswer::where('student_id', $std)->where('sq_category_id', 5)->sum('answer') / 6;
+                $answers = SqAnswer::select('student_id')->groupBy('student_id')->get()->toArray();
+                $countStudent = count($answers);
+                // Cat 1
+                $cat1 = 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0; $cat6 = 0; $cat7 = 0;
+                foreach ($answers as $key => $val) {
+                    $student_id = $val;
+                    $cat1 += SqAnswer::where('student_id', $student_id)->where('sq_category_id', 1)->sum('answer') / 7;
+                    $cat2 += SqAnswer::where('student_id', $student_id)->where('sq_category_id', 2)->sum('answer') / 8;
+                    $cat3 += SqAnswer::where('student_id', $student_id)->where('sq_category_id', 3)->sum('answer') / 6;
+                    $cat4 += SqAnswer::where('student_id', $student_id)->where('sq_category_id', 4)->sum('answer') / 5;
+                    $cat5 += SqAnswer::where('student_id', $student_id)->where('sq_category_id', 5)->sum('answer') / 6;
                 }
 
-                    $cat1 == 0 ? $cat1 = 0 : $cat1 /= $studentLength;
-                    $cat2 == 0 ? $cat2 = 0 : $cat2 /= $studentLength;
-                    $cat3 == 0 ? $cat3 = 0 : $cat3 /= $studentLength;
-                    $cat4 == 0 ? $cat4 = 0 : $cat4 /= $studentLength;
-                    $cat5 == 0 ? $cat5 = 0 : $cat5 /= $studentLength;
+                $categories = [
+                    'Tangibles', 'Reliability', 'Responsiveness', 'Assurance', 'Empathy'
+                ];  
+
+                $avg_cat1 = $cat1 / $countStudent;
+                $avg_cat2 = $cat2 / $countStudent;
+                $avg_cat3 = $cat3 / $countStudent;
+                $avg_cat4 = $cat4 / $countStudent;
+                $avg_cat5 = $cat5 / $countStudent;
                     
-                $max   = [(int) $cat1, (int) $cat2, (int) $cat3, (int) $cat4, (int) $cat5];
+                $max   = [
+                    number_format((float)$avg_cat1, 2, '.', ''),
+                    number_format((float)$avg_cat2, 2, '.', ''),
+                    number_format((float)$avg_cat3, 2, '.', ''),
+                    number_format((float)$avg_cat4, 2, '.', ''),
+                    number_format((float)$avg_cat5, 2, '.', ''),
+                ];
                 $color = ['#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54'];
+
+                return view('index', [
+                    'labels' => json_encode($categories),
+                    'max'   => json_encode($max),
+                    'color'  => json_encode($color),
+                ]);
                 break;
             
             case 2:
-                $lecturerWhoAnswers = LqAnswer::select('lecturer_id')->groupBy('lecturer_id')->get()->toArray();
-                $studentLength = count($lecturerWhoAnswers);
+
+                $answers = LqAnswer::select('lecturer_id')->groupBy('lecturer_id')->get()->toArray();
+                $countlecturer = count($answers);
                 $categories = [
                     'Pengembangan Kompetensi', 
                     'Pengembangan Karir / Jabatan', 
@@ -325,57 +387,83 @@ class AcademicsController extends Controller
                     'Kebutuhan Kesehatan dan Kebugaran',
                     'Pengabdian Kepada Masyarakat'
                 ];
-                $cat1= 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0; $cat6 = 0; $cat7 = 0; $cat8 = 0;
-
-                foreach ($lecturerWhoAnswers as $key => $std) {
-                    $cat1 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 1)->sum('answer') / 6;
-                    $cat2 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 2)->sum('answer') / 7;
-                    $cat3 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 3)->sum('answer') / 9;
-                    $cat4 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 4)->sum('answer') / 7;
-                    $cat5 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 5)->sum('answer') / 6;
-                    $cat6 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 6)->sum('answer') / 3;
-                    $cat7 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 7)->sum('answer') / 3;
-                    $cat8 += LqAnswer::where('lecturer_id', $std)->where('lq_category_id', 8)->sum('answer') / 3;
+                // Cat 1
+                $cat1 = 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0; $cat6 = 0; $cat7 = 0; $cat8 = 0;
+                foreach ($answers as $key => $val) {
+                    $lecturer_id = $val;
+                    $cat1 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 1)->sum('answer') / 6;
+                    $cat2 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 2)->sum('answer') / 7;
+                    $cat3 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 3)->sum('answer') / 9;
+                    $cat4 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 4)->sum('answer') / 7;
+                    $cat5 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 5)->sum('answer') / 6;
+                    $cat6 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 6)->sum('answer') / 3;
+                    $cat7 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 7)->sum('answer') / 3;
+                    $cat8 += LqAnswer::where('lecturer_id', $lecturer_id)->where('lq_category_id', 8)->sum('answer') / 3;
                 }
 
-                    $cat1 == 0 ? $cat1 = 0 : $cat1 /= $studentLength;
-                    $cat2 == 0 ? $cat2 = 0 : $cat2 /= $studentLength;
-                    $cat3 == 0 ? $cat3 = 0 : $cat3 /= $studentLength;
-                    $cat4 == 0 ? $cat4 = 0 : $cat4 /= $studentLength;
-                    $cat5 == 0 ? $cat5 = 0 : $cat5 /= $studentLength; 
-                    $cat6 == 0 ? $cat6 = 0 : $cat6 /= $studentLength; 
-                    $cat7 == 0 ? $cat7 = 0 : $cat7 /= $studentLength; 
-                    $cat8 == 0 ? $cat8 = 0 : $cat8 /= $studentLength; 
+                $avg_cat1 = $cat1 / $countlecturer;
+                $avg_cat2 = $cat2 / $countlecturer;
+                $avg_cat3 = $cat3 / $countlecturer;
+                $avg_cat4 = $cat4 / $countlecturer;
+                $avg_cat5 = $cat5 / $countlecturer;
+                $avg_cat6 = $cat6 / $countlecturer;
+                $avg_cat7 = $cat7 / $countlecturer;
+                $avg_cat8 = $cat8 / $countlecturer;
                     
-                $max   = [(int) $cat1, (int) $cat2, (int) $cat3, (int) $cat4, (int) $cat5, (int) $cat6, (int) $cat7, (int) $cat8];
+                $max   = [
+                    number_format((float)$avg_cat1, 2, '.', ''),
+                    number_format((float)$avg_cat2, 2, '.', ''),
+                    number_format((float)$avg_cat3, 2, '.', ''),
+                    number_format((float)$avg_cat4, 2, '.', ''),
+                    number_format((float)$avg_cat5, 2, '.', ''),
+                    number_format((float)$avg_cat6, 2, '.', ''),
+                    number_format((float)$avg_cat7, 2, '.', ''),
+                    number_format((float)$avg_cat8, 2, '.', ''),
+                ];
+
                 $color = ['#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54', '#ff7b54'];
+
+                return view('index', [
+                    'labels' => json_encode($categories),
+                    'max'    => json_encode($max),
+                    'color'  => json_encode($color),
+                ]);
+
                 break;
 
             case 3:
-                $studentsWhoAnswers = AqAnswer::select('alumni_id')->groupBy('alumni_id')->get()->toArray();
-                $studentLength = count($studentsWhoAnswers);
-                $categories = ['Umum', 'Mutu dan Kompetensi Lulusan', 'Kebutuhan Stakeholder Kota'];
-                $cat1= 0; $cat2 = 0; $cat3 = 0; $cat4 = 0; $cat5 = 0;
 
-                foreach ($studentsWhoAnswers as $key => $std) {
-                    $cat1 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 1)->sum('answer') / 9;
-                    $cat2 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 2)->sum('answer') / 4;
-                    $cat3 += AqAnswer::where('alumni_id', $std)->where('aq_category_id', 3)->sum('answer') / 5;
+                $answers = AqAnswer::select('alumni_id')->groupBy('alumni_id')->get()->toArray();
+                $countalumni = count($answers);
+                $categories = ['Umum', 'Mutu dan Kompetensi Lulusan', 'Kebutuhan Stakeholder Kota'];
+
+                $cat1 = 0; $cat2 = 0; $cat3 = 0;
+                foreach ($answers as $key => $val) {
+                    $alumni_id = $val;
+                    $cat1 += AqAnswer::where('alumni_id', $alumni_id)->where('aq_category_id', 1)->sum('answer') / 9;
+                    $cat2 += AqAnswer::where('alumni_id', $alumni_id)->where('aq_category_id', 2)->sum('answer') / 4;
+                    $cat3 += AqAnswer::where('alumni_id', $alumni_id)->where('aq_category_id', 3)->sum('answer') / 5;
                 }
-                
-                    $cat1 == 0 ? $cat1 = 0 : $cat1 /= $studentLength;
-                    $cat2 == 0 ? $cat2 = 0 : $cat2 /= $studentLength;
-                    $cat3 == 0 ? $cat3 = 0 : $cat3 /= $studentLength;
+
+                $avg_cat1 = $cat1 / $countalumni;
+                $avg_cat2 = $cat2 / $countalumni;
+                $avg_cat3 = $cat3 / $countalumni;
                     
-                $max   = [(int) $cat1, (int) $cat2, (int) $cat3];
+                $max   = [
+                    number_format((float)$avg_cat1, 2, '.', ''),
+                    number_format((float)$avg_cat2, 2, '.', ''),
+                    number_format((float)$avg_cat3, 2, '.', ''),
+                ];
                 $color = ['#ff7b54', '#ff7b54', '#ff7b54'];
+
+                return view('index', [
+                    'labels' => json_encode($categories),
+                    'max'    => json_encode($max),
+                    'color'  => json_encode($color),
+                ]);
+                
                 break;
         }
-        return view('index', [
-            'labels' => json_encode($categories),
-            'max'   => json_encode($max),
-            'color'  => json_encode($color),
-        ]);
     }
 
     public function complain () {

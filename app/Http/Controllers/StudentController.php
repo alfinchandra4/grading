@@ -92,6 +92,8 @@ class StudentController extends Controller
                 }
             }
 
+            Student::find(Auth::guard('student')->user()->id)->update([ 'filled' => date('Y-m-d H:i:s') ]);
+
             session()->put('success', 'Berhasil isi formulir kuisioner');
             return redirect()->route('dashboard');
             

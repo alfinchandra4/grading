@@ -27,6 +27,7 @@ class CreateStudentsTable extends Migration
             $table->char('phone');
             $table->char('email');
             $table->char('active')->default(1); // pasif for alumni
+            $table->dateTime('filled')->nullable();
             $table->timestamps();
         });
     }

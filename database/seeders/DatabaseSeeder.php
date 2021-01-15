@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             LqQuestionSeeder::class,
             AqCategorySeeder::class,
             AqQuestionSeeeder::class,
-            SqAnswerTableSeeder::class
+            // SqAnswerTableSeeder::class
         ]);
     }
 }

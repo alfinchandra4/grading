@@ -19,6 +19,14 @@
           </ul>
         </div>
         <div class="card mt-2">
+          <div class="card-header d-flex justify-content-between">
+            <div>
+              Pengaduan Mahasiswa
+           </div>
+           <div>
+              <a href="{{ route('student_export') }}" class="text-decoration-none" style="color: black"> <i class="fa fa-file-excel" aria-hidden="true"></i> Lihat laporan  </a>
+           </div>
+          </div>
             <div class="card-body">
               @if (session('role') == 1)
               <table class="table">

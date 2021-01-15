@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alumni;
 use App\Models\AqAnswer;
 use App\Models\AqCategory;
 use App\Models\AqQuestion;
@@ -87,16 +88,27 @@ class AlumniController extends Controller
                 }
             }
 
+            Alumni::find(Auth::guard('alumni')->user()->id)->update([ 'filled' => date('Y-m-d H:i:s') ]);
+
             session()->put('success', 'Berhasil isi formulir kuisioner');
             return redirect()->route('dashboard');
             
         }
 
-    public function profile () {
-
-    }
-
-    public function profilestore () { 
-
-    }
+        public function profile () { 
+            session()->put('dashboard', false);
+            $alumni_id = Auth::guard('alumni')->user()->id;
+            $alumni = Alumni::find($alumni_id);
+            return view('profile_alumni', [
+                'alumni' => $alumni
+            ]);
+        }
+    
+        public function profilestore (Request $request) {
+            alumni::where('nim', $request->nim)->update([
+                'phone' => $request->phone,
+                'email' => $request->email,
+            ]);
+            return back()->withSuccess('Berhasil update profil');
+        }
 }
