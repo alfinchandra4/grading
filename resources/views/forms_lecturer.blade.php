@@ -22,9 +22,8 @@
                 dengan keterangan sebagai berikut: <br />
                 1 = Sangat Tidak Setuju <br />
                 2 = Tidak Setuju </br>
-                3 = Cukup Setuju </br>
-                4 = Setuju </br>
-                5 = Sangat Setuju <br />
+                3 = Setuju </br>
+                4 = Sangat Setuju <br />
             </div>
         </div>
         <div class="card question offset-1 col-10 mt-5">

@@ -47,61 +47,35 @@ class AcademicsController extends Controller
 
     public function summary ($role) {
         session()->put('visual', 1);
-        $defaultPercentage = false;
         switch ($role) {
-            // different actor
-
             case 1:
                     // student
-                    $agree = SqAnswer::whereIn('answer', [1, 2])->count();
-                    $disagree = SqAnswer::whereIn('answer', [3, 4])->count();
-                    if ($agree != 0 && $disagree != 0) {
-                        $percentage = [
-                            'agree' => ($agree / ($agree + $disagree)) * 100,
-                            'disagree' => ($disagree / ($agree + $disagree)) * 100,
-                        ];
-                    } else {
-                        $defaultPercentage = true;
-                    }
+                    $agree = SqAnswer::whereIn('answer', [3, 4])->count();
+                    $disagree = SqAnswer::whereIn('answer', [1, 2])->count();
                 break;
             
             case 2:
                 // lecturer
-                    $agree = LqAnswer::whereIn('answer', [1, 2])->count();
-                    $disagree = LqAnswer::whereIn('answer', [3, 4])->count();
-                    if ($agree != 0 && $disagree != 0) {
-                        $percentage = [
-                            'agree' => ($agree / ($agree + $disagree)) * 100,
-                            'disagree' => ($disagree / ($agree + $disagree)) * 100,
-                        ];
-                    } else {
-                        $defaultPercentage = true;
-                    }
+                    $agree = LqAnswer::whereIn('answer', [3, 4])->count();
+                    $disagree = LqAnswer::whereIn('answer', [1, 2])->count();
                 break;
             
             case 3:
-                    $agree = AqAnswer::whereIn('answer', [1, 2])->count();
-                    $disagree = AqAnswer::whereIn('answer', [3, 4])->count();
-                    if ($agree != 0 && $disagree != 0) {
-                        $percentage = [
-                            'agree' => ($agree / ($agree + $disagree)) * 100,
-                            'disagree' => ($disagree / ($agree + $disagree)) * 100,
-                        ];
-                    } else {
-                        $defaultPercentage = true;
-                    }
+                    $agree = AqAnswer::whereIn('answer', [3, 4])->count();
+                    $disagree = AqAnswer::whereIn('answer', [1, 2])->count();
                 break;
 
         }
-        if ($defaultPercentage != true) {
-            $percentage = [
-                'agree' => number_format((float)($agree / ($agree + $disagree)) * 100, 2, '.', ''),
-                'disagree' => number_format((float)($disagree / ($agree + $disagree)) * 100, 2, '.', ''),
-            ];
-        } else {
+        
+        if($agree == 0 && $disagree == 0) {
             $percentage = [
                 'agree' => 50,
                 'disagree' => 50,
+            ];
+        } else {
+            $percentage = [
+                'agree' => number_format((float)($agree / ($agree + $disagree)) * 100, 2, '.', ''),
+                'disagree' => number_format((float)($disagree / ($agree + $disagree)) * 100, 2, '.', ''),
             ];
         }
 
@@ -131,7 +105,7 @@ class AcademicsController extends Controller
 
                     // loop berdasarkan tiap2 student id yg tahunnya sama
                         foreach ($studentsPerYears as $key => $value) {
-                            $trueanswer = SqAnswer::where('student_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = SqAnswer::where('student_id', $value)->whereIn('answer', [3, 4])->count();
                             $trueanswer = (int) $trueanswer / 32 * 100;
                             $numberOfTrueAnswer += $trueanswer;
                         }
@@ -171,7 +145,7 @@ class AcademicsController extends Controller
                     $data = 0;
                     $numberOfTrueAnswer = 0;
                         foreach ($lecturerPerYears as $key => $value) {
-                            $trueanswer = LqAnswer::where('lecturer_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = LqAnswer::where('lecturer_id', $value)->whereIn('answer', [3, 4])->count();
                             $trueanswer = (int) $trueanswer / 44 * 100;
                             $numberOfTrueAnswer += $trueanswer;
                         }
@@ -206,7 +180,7 @@ class AcademicsController extends Controller
                     $data = 0;
                     $numberOfTrueAnswer = 0;
                         foreach ($alumniPerYears as $key => $value) {
-                            $trueanswer = AqAnswer::where('alumni_id', $value)->whereIn('answer', [1, 2])->count();
+                            $trueanswer = AqAnswer::where('alumni_id', $value)->whereIn('answer', [3, 4])->count();
                             $trueanswer = (int) $trueanswer / 18 * 100;
                             $numberOfTrueAnswer += $trueanswer;
                         }
@@ -249,9 +223,11 @@ class AcademicsController extends Controller
                 $si = Student::whereIn('id', $studentsWhoAnswers)->where('major', 1)->whereYear('filled', date('Y'))->select('id')->get()->toArray();
                 $siTotalAnswer = 0;
                 $siNumberOfStudent = count($si);
+                $aa = [];
                 foreach ($si as $key => $std) {
-                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
-                    $answers = (int) $answers / 32 * 100;
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [3, 4])->count();
+                    $aa [] = $answers;
+                    $answers = $answers / 32 * 100;
                     $siTotalAnswer += $answers;
                 }
                 $siTotalAnswer == 0 ? $siTotalAnswer = 0 : $siTotalAnswer /= $siNumberOfStudent;
@@ -261,8 +237,8 @@ class AcademicsController extends Controller
                 $tiTotalAnswer = 0;
                 $tiNumberOfStudent = count($ti);
                 foreach ($ti as $key => $std) {
-                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
-                    $answers = (int) $answers / 32 * 100;
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [3, 4])->count();
+                    $answers = $answers / 32 * 100;
                     $tiTotalAnswer += $answers;
                 }
                 $tiTotalAnswer == 0 ? $tiTotalAnswer = 0 : $tiTotalAnswer /= $tiNumberOfStudent;
@@ -272,14 +248,14 @@ class AcademicsController extends Controller
                 $miTotalAnswer = 0;
                 $miNumberOfStudent = count($mi);
                 foreach ($mi as $key => $std) {
-                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [1, 2])->count();
-                    $answers = (int) $answers / 32 * 100;
+                    $answers = SqAnswer::where('student_id', $std)->whereIn('answer', [3, 4])->count();
+                    $answers = $answers / 32 * 100;
                     $miTotalAnswer += $answers;
                 }
                 $miTotalAnswer == 0 ? $miTotalAnswer = 0 : $miTotalAnswer /= $miNumberOfStudent;
 
                 $data = [(int) $siTotalAnswer, (int) $tiTotalAnswer, (int) $miTotalAnswer];
-
+                // dd($data);
                 return view('index', [
                     'data' => json_encode($data)
                 ]);
@@ -293,7 +269,7 @@ class AcademicsController extends Controller
                 $siTotalAnswer = 0;
                 $siNumberOfAlumni = count($si);
                 foreach ($si as $key => $std) {
-                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [3, 4])->count();
                     $answers = (int) $answers / 32 * 100;
                     $siTotalAnswer += $answers;
                 }
@@ -304,7 +280,7 @@ class AcademicsController extends Controller
                 $tiTotalAnswer = 0;
                 $tiNumberOfAlumni = count($ti);
                 foreach ($ti as $key => $std) {
-                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [3, 4])->count();
                     $answers = (int) $answers / 32 * 100;
                     $tiTotalAnswer += $answers;
                 }
@@ -315,7 +291,7 @@ class AcademicsController extends Controller
                 $miTotalAnswer = 0;
                 $miNumberOfAlumni = count($mi);
                 foreach ($mi as $key => $std) {
-                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [1, 2])->count();
+                    $answers = AqAnswer::where('alumni_id', $std)->whereIn('answer', [3, 4])->count();
                     $answers = (int) $answers / 32 * 100;
                     $miTotalAnswer += $answers;
                 }

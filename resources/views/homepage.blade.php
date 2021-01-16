@@ -113,6 +113,9 @@
                 Website e-CRM UPN “Veteran” Jakarta merupakan website yang digunakan untuk mengukur tingkat kepuasan pelayanan di kampus UPNVJ. Dengan mengakses website ini Anda dapat memberikan penilaian anda mengenai kepuasan Anda pada pelayanan UPNVJ.
                 Segera berikan penilaian Anda untuk peningkatan pelayanan UPN “Veteran” Jakarta yang lebih Baik!
             </div>
+            <div class="h5 mt-3" style="color: yellow">
+                <a href="https://elearning40.upnvj.ac.id/" class="text-decoration-none" style="color: yellow">E-Learning</a> | <a href="https://akademik.upnvj.ac.id/" class="text-decoration-none" style="color: yellow">SIAKAD</a>
+            </div>
         </div>
     </main>
 

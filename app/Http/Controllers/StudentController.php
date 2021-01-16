@@ -70,7 +70,7 @@ class StudentController extends Controller
             foreach ($arrForms as $key => $value) {
                 $decoding [] = json_decode($value);
             }
-            
+
             // merging the answer to array
             $answers = [];
             foreach ($decoding as $key => $value) {
@@ -78,17 +78,21 @@ class StudentController extends Controller
                     $answers [] = $val;
                 }
             }
-
+            // dd($decoding, $answers);
             // store data
             $s = SqCategory::all();
+            $aa = [];
+            $i = 0;
             foreach ($s as $value) {
-                foreach ($value->sq_question as $key => $questions) {
+                foreach ($value->sq_question as $questions) {
+                    $aa [] = [$answers[$key], $i];
                     SqAnswer::create([
-                        'answer'         => $answers[$key],
+                        'answer'         => $answers[$i],
                         'student_id'     => Auth::guard('student')->user()->id,
                         'sq_category_id' => $value->id,
                         'sq_question_id' => $questions->id
                     ]);
+                    $i++;
                 }
             }
 
