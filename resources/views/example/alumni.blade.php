@@ -15,6 +15,7 @@
             <tr>
                 <th>Name</th>
                 <th>Nim</th>
+                <th>Jurusan</th>
                 <th>Email</th>
             </tr>
         </thead>
@@ -26,6 +27,13 @@
                 <tr>
                     <td>{{ $std->name }}</td>
                     <td>{{ $std->nim }}</td>
+                    <td>
+                        @switch($std->major)
+                            @case(1) Sistem informasi @break
+                            @case(2) Informatika @break
+                            @case(3) D3 Sistem Informasi @break
+                        @endswitch
+                    </td>
                     <td>{{ $std->email }}</td>
                 </tr>
             @endforeach
